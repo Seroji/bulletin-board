@@ -17,6 +17,7 @@ class Post(models.Model):
     author = models.ForeignKey(User,
                                related_name='posts', 
                                on_delete=models.CASCADE)
+    like = models.PositiveIntegerField(default=0)
     content = HTMLField(default=None)
 
 
@@ -34,6 +35,7 @@ class Comment(models.Model):
     text = models.TextField()
     time_in = models.DateTimeField(auto_now_add=True)
     time_updated = models.DateTimeField(auto_now=True)
+    like = models.PositiveIntegerField(default=0)
     post = models.ForeignKey(Post,
                              related_name="comments",
                              on_delete=models.CASCADE)
