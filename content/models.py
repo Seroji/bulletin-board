@@ -11,13 +11,20 @@ class Category(models.Model):
 
 class Post(models.Model):
     title = models.CharField(max_length=128)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    category = models.ManyToManyField(Category, through='PostCategory')
     time_in = models.DateTimeField(auto_now_add=True)
     time_updated = models.DateTimeField(auto_now=True)
     author = models.ForeignKey(User,
                                related_name='posts', 
                                on_delete=models.CASCADE)
     content = HTMLField(default=None)
+
+
+class PostCategory(models.Model):
+    category = models.ForeignKey(Category, 
+                                 on_delete=models.CASCADE)
+    post = models.ForeignKey(Post,
+                             on_delete=models.CASCADE)
 
 
 class Comment(models.Model):
