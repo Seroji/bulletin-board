@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -25,18 +26,22 @@ SECRET_KEY = 'django-insecure-w5z87&$%@(p64c72&gmcsp)f&ojh(nq+2^fg52jar$ip1ejti)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1']
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'grappelli',
+    'filebrowser',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'tinymce',
+    'content',
 ]
 
 MIDDLEWARE = [
@@ -103,7 +108,12 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru'
+
+LANGUAGES = [
+    ('ru', 'Русский'),
+    ('en-us', 'English'),
+]
 
 TIME_ZONE = 'UTC'
 
@@ -117,7 +127,57 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'collected_static')
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+#TinyMCE
+TINYMCE_JS_ROOT = os.path.join(BASE_DIR, "extensions/tinymce/tinymce.min.js")
+TINYMCE_COMPRESSOR = False
+TINYMCE_FILEBROWSER = True
+TINYMCE_SPELLCHECKER = True
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+PROJECT_DIR = os.path.dirname(__file__)
+
+TINYMCE_JS_ROOT = os.path.join(STATIC_ROOT, "tinymce")
+
+FILEBROWSER_DIRECTORY = ''
+DIRECTORY = ''
+
+X_FRAME_OPTIONS = 'SAMEORIGIN'
+
+TINYMCE_DEFAULT_CONFIG = {
+    "relative_urls": False,
+    "remove_script_host": False,
+    "convert_urls": True,
+    'cleanup_on_startup': True,
+    'custom_undo_redo_levels': 20,
+    'theme': 'silver',
+    'plugins': '''
+            textcolor save link image media preview codesample contextmenu
+            table code lists fullscreen  insertdatetime  nonbreaking
+            contextmenu directionality searchreplace wordcount visualblocks
+            visualchars code fullscreen autolink lists  charmap print  hr
+            anchor pagebreak
+            ''',
+    'toolbar1': '''
+            bold italic underline | fontselect,
+            fontsizeselect  | forecolor backcolor | alignleft alignright |
+            aligncenter alignjustify | indent outdent | bullist numlist table |
+            | link image media | codesample |
+            ''',
+
+    'contextmenu': 'formats | link image',
+    'menubar': True,
+    'statusbar': True,
+    "language": "ru",
+}
