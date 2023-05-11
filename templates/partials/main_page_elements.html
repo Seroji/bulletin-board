@@ -1,0 +1,26 @@
+{% load static %}
+{% load custom_filters %}
+
+{% for announcement in announcements %}
+{% if forloop.last %}
+<div class="container announce-block" hx-get="{% url 'main_page' %}?page={{ page_obj.number|add:1 }}" hx-trigger="revealed" hx-swap="afterend" hx-target="this">
+{% else %}
+<div class="container announce-block">
+{% endif %}
+    <div class="row">
+        <div class="col-md-12">
+            <span><a href="#" class="post-author">{{ announcement.author }}</a>, <span class="time-next-to-username">{{ announcement.time_in }}</span></span>
+            <div class="post-content text-center">
+            <p><a href="#" class="post-link">{{ announcement.title }}</a></p>
+            <p><img class="image-cover-post" src="{{ announcement.cover.url }}"></p>
+            </div>
+            <span class="small-icons-post">
+                <a href="#"><img class="small-icons-post-img" src="{% static 'img/icons/favourite_empty.png' %}"></a>
+                {{ announcement.like }}
+                <a href="#"><img class="small-icons-post-img" src="{% static 'img/icons/bookmark_not_add.png' %}"></a>
+                {{ announcement.id |total_followers }}
+            </span>
+        </div>
+    </div>
+</div>
+{% endfor %}
