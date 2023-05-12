@@ -7,21 +7,27 @@ from .models import Post, Comment, Reply
 
 class MainPageView(generic.ListView):
     model = Post
-    context_object_name = 'announcements'
-    template_name = 'main_page.html'
-    paginate_by = 1   #Поменять порядок новостей
+    context_object_name = "announcements"
+    template_name = "main_page.html"
+    paginate_by = 1  # Поменять порядок новостей
 
     def get_template_names(self):
+        self.template_name
         if self.request.htmx:
-            return 'partials/main_page_elements.html'
-        return 'main_page.html'
+            return "partials/main_page_elements.html"
+        return "main_page.html"
 
-class OwnProfileView(View):
+
+class MainProfileView(generic.DetailView):
     def get(self, request):
-        return render(request, 'profile/profile.html')
+        return render(request, "profile/profile.html")
     
-
-class OwnProfileStaticticView(View):
+#htmx
+class MainProfileGetView(View):
     def get(self, request):
-        pk = request.user.id
-        return HttpResponse('1233345')
+        return render(request, 'partials/profile_main.html')
+    
+#htmx
+class StatProfileGetView(View):
+    def get(self, request):
+        return render(request, 'partials/profile_stat.html')

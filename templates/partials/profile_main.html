@@ -1,6 +1,6 @@
-{% extends 'flatpages/default.html' %}
+{% load static %}
 
-{% block content %}
+
 <div class="container profile-content">
     <div class="row">
         <div class="col-md-4">
@@ -12,7 +12,7 @@
                   <a class="nav-link active" aria-current="page" href="#">Активная</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="#">Статистика</a>
+                  <a class="nav-link" href="#" hx-get="/prof_stat">Статистика</a>
                 </li>
               </ul>
             <table class="profile-table" id="profile-table">
@@ -42,4 +42,3 @@
         </div>
     </div>
 </div>
-{% endblock content %}

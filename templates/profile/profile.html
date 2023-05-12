@@ -1,45 +1,9 @@
 {% extends 'flatpages/default.html' %}
 
+{% load static %]}
+
 {% block content %}
-<div class="container profile-content">
-    <div class="row">
-        <div class="col-md-4">
-            Пикча
-        </div>
-        <div class="col-md-8">
-            <ul class="nav nav-tabs" >
-                <li class="nav-item">
-                  <a class="nav-link active" aria-current="page" href="#">Активная</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="#">Статистика</a>
-                </li>
-              </ul>
-            <table class="profile-table" id="profile-table">
-                <tr>
-                    <td><b>Имя:</b></td>
-                    <td>---</td>
-                </tr>
-                <tr>
-                    <td><b>Фамилия:</b></td>
-                    <td>---</td>
-                </tr>
-                <tr>
-                    <td><b>Имя пользователя:</b></td>
-                    <td>{{ request.user.username }}</td>
-                </tr>
-                <tr>
-                    <td><b>Дата регистрации:</b></td>
-                    <td>{{ request.user.date_joined | date }}</td>
-                </tr>
-                <tr>
-                    <td><a class="post-link" href="#">Поменять пароль</a></td>
-                </tr>
-                <tr>
-                    <td><a class="post-link" href="#">Поменять данные профиля</a></td>
-                </tr>
-            </table>
-        </div>
-    </div>
+<div id="tabs" hx-get="/tab1" hx-trigger="load delay:100ms" hx-target="#tabs" hx-swap="innerHTML">
+    {% include 'partials/profile_main.html' %}
 </div>
 {% endblock content %}

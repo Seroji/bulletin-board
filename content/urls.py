@@ -1,15 +1,16 @@
 from django.urls import path, include
 
-from .views import MainPageView, OwnProfileView, OwnProfileStaticticView
+from .views import MainPageView, MainProfileView, MainProfileGetView, StatProfileGetView
 
 
 urlpatterns = [
     path('', MainPageView.as_view(), name='main_page'),
-    path('profile/', OwnProfileView.as_view(), name='own_profile'),
+    path('profile/', MainProfileView.as_view(), name='main_profile'),
 ]
 
 htmx_patterns = [
-    path('statisctics/', OwnProfileStaticticView.as_view(), name='profile-statistics')
+    path('prof_main', MainProfileGetView.as_view()),
+    path('prof_stat', StatProfileGetView.as_view()),
 ]
 
 urlpatterns += htmx_patterns

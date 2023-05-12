@@ -61,7 +61,7 @@ img {
 }
 
 .image-cover-post {
-    width: 500px;
+    max-width: 200px;
 }
 
 .post-link {
