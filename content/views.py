@@ -30,4 +30,11 @@ class MainProfileGetView(View):
 #htmx
 class StatProfileGetView(View):
     def get(self, request):
-        return render(request, 'partials/profile_stat.html')
+        count = 0
+        all_posts = Post.objects.filter(author_id=self.request.user.id)
+        for post in all_posts:
+            count += Reply.objects.filter(post=post).count()
+        context = {
+            'total_replies': count,
+        }
+        return render(request, 'partials/profile_stat.html', context=context)
