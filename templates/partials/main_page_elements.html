@@ -10,7 +10,8 @@
     <div class="row">
         <div class="col-md-12">
             <span><a href="#" class="post-author">{{ announcement.author }}</a>, <span class="time-next-to-username">{{ announcement.time_in }}</span></span>
-            <div class="post-content text-center">
+            <div class="post-content">
+                <div class="row">
             <p><a href="#" class="post-link">{{ announcement.title }}</a></p>
             <p><img class="image-cover-post" src="{{ announcement.cover.url }}"></p>
             </div>
@@ -20,6 +21,7 @@
                 <a href="#"><img class="small-icons-post-img" src="{% static 'img/icons/bookmark_not_add.png' %}"></a>
                 {{ announcement.id |total_followers }}
             </span>
+        </div>
         </div>
     </div>
 </div>
