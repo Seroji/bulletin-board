@@ -57,3 +57,4 @@ class Reply(models.Model):
                              on_delete=models.CASCADE)
     author = models.ForeignKey(User,
                                on_delete=models.CASCADE)
+    text = models.TextField(default='Отклик')

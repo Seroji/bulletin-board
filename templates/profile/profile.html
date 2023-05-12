@@ -3,7 +3,7 @@
 {% load static %]}
 
 {% block content %}
-<div id="tabs" hx-get="/tab1" hx-trigger="load delay:100ms" hx-target="#tabs" hx-swap="innerHTML">
+<div id="tabs" hx-trigger="load delay:100ms" hx-target="#tabs" hx-swap="innerHTML">
     {% include 'partials/profile_main.html' %}
 </div>
 {% endblock content %}

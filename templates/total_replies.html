@@ -1,0 +1,33 @@
+{% extends 'flatpages/default.html' %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col text-center">
+                <h5>Все отклики на ваши объявления</h5>
+                    <table class="table table-striped">
+                        <tr>
+                            <th>Автор отклика</th>
+                            <th>Ваш пост</th>
+                            <th>Текст отклика</th>
+                        </tr>
+                        {% for obj in replies %}
+                        <tr>
+                            <td>
+                                {{ obj.author }}
+                            </td>
+                            <td>
+                                <a class="post-link" href="#">
+                                    {{ obj.post.title }}
+                                </a>
+                            </td>
+                            <td>
+                                {{ obj.text }}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

@@ -22,11 +22,13 @@ class MainProfileView(generic.DetailView):
     def get(self, request):
         return render(request, "profile/profile.html")
     
+
 #htmx
 class MainProfileGetView(View):
     def get(self, request):
         return render(request, 'partials/profile_main.html')
     
+
 #htmx
 class StatProfileGetView(View):
     def get(self, request):
@@ -38,3 +40,18 @@ class StatProfileGetView(View):
             'total_replies': count,
         }
         return render(request, 'partials/profile_stat.html', context=context)
+    
+
+class TotalRepleisView(View):
+    def get(self, request):
+        replies = []
+        all_posts = Post.objects.filter(author_id=self.request.user.id)
+        for post in all_posts:
+            obj = Reply.objects.all().filter(post=post)
+            if obj:
+                replies.append(obj[0])
+        context = {
+            'replies': replies,
+        }
+        print(replies)
+        return render(request, 'total_replies.html', context=context)
