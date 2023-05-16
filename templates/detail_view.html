@@ -1,0 +1,18 @@
+{% extends 'flatpages/default.html' %}
+
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col text-start">
+            {{ obj.author }}, {{ obj.time_in }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col text-center">
+            <h3>{{ obj.title }}</h3
+            {{ obj.content|safe }}
+        </div>
+    </div>
+</div>
+{% endblock content %}

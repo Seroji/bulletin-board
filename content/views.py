@@ -55,3 +55,10 @@ class TotalRepleisView(View):
         }
         print(replies)
         return render(request, 'total_replies.html', context=context)
+    
+
+
+class PostDetailView(generic.DetailView):
+    model = Post
+    template_name = 'detail_view.html'
+    context_object_name = 'obj'

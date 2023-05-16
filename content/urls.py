@@ -6,6 +6,7 @@ from .views import (
     MainProfileGetView,
     StatProfileGetView,
     TotalRepleisView,
+    PostDetailView
 )
 
 
@@ -13,6 +14,7 @@ urlpatterns = [
     path("", MainPageView.as_view(), name="main_page"),
     path("profile/", MainProfileView.as_view(), name="main_profile"),
     path("replies/", TotalRepleisView.as_view(), name='total_replies'),
+    path("detail/<int:pk>/", PostDetailView.as_view(), name='post_detail'),
 ]
 
 htmx_patterns = [
