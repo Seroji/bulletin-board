@@ -95,5 +95,16 @@ img {
 }
 
 .profile-change-form {
-    padding: 5px;
+    padding: 10px;
+}
+
+.password-change-back {
+    color: black;
+    text-decoration: None;
+    font-weight: 400;
+    padding: 10px;
+}
+
+.password-change-back:hover {
+    color: grey;
 }

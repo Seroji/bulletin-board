@@ -3,9 +3,10 @@ from django.db import models
 from django.shortcuts import render, HttpResponse
 from django.views import generic, View
 from django.urls import reverse_lazy
+from django.contrib.auth.views import PasswordChangeView
 
 from .models import Post, Reply, PostUserFavourite, PostUserLike
-from .forms import ProfileChangeForm
+from .forms import ProfileChangeForm, PasswordEditForm
 
 
 class MainPageView(generic.ListView):
@@ -132,3 +133,9 @@ class ProfileChangeView(generic.UpdateView):
 class AfterChangeProfileView(View):
     def get(self, request, *args, **kwargs):
         return render(self.request, 'partials/after_change_profile.html')
+
+
+class PasswordEditView(PasswordChangeView):
+    form_class = PasswordEditForm
+    template_name = 'profile/password_change.html'
+    success_url = reverse_lazy('main_profile')

@@ -37,7 +37,7 @@
                     <td>{{ request.user.date_joined | date }}</td>
                 </tr>
                 <tr>
-                    <td><a class="post-link" href="#">Поменять пароль</a></td>
+                    <td><a class="post-link" href="{% url 'password_change' %}">Поменять пароль</a></td>
                 </tr>
                 <tr>
                     <td><a class="post-link" hx-get="{% url 'profile_change' %}" hx-trigger="click" hx-target="#profile-table" hx-swap="outerHTML">Поменять данные профиля</a></td>
