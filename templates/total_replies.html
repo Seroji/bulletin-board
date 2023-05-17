@@ -5,6 +5,7 @@
         <div class="row">
             <div class="col text-center">
                 <h5>Все отклики на ваши объявления</h5>
+                <br>
                     <table class="table table-striped">
                         <tr>
                             <th>Автор отклика</th>
@@ -17,7 +18,7 @@
                                 {{ obj.author }}
                             </td>
                             <td>
-                                <a class="post-link" href="#">
+                                <a class="post-link" href="{% url 'post_detail' pk=obj.post_id %}">
                                     {{ obj.post.title }}
                                 </a>
                             </td>

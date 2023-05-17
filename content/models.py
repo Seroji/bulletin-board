@@ -18,7 +18,6 @@ class Post(models.Model):
     author = models.ForeignKey(User,
                                related_name='posts', 
                                on_delete=models.CASCADE)
-    like = models.PositiveIntegerField(default=0)
     content = HTMLField(default=None)
     cover = models.ImageField(upload_to='news_cover/')  #Настроить генераци+ю случайного неповторяющегося имени файла
     follow = models.ManyToManyField(User,
@@ -37,6 +36,13 @@ class PostUserFavourite(models.Model):
                              on_delete=models.CASCADE)
     follower = models.ForeignKey(User,
                                  on_delete=models.CASCADE)
+    
+
+class PostUserLike(models.Model):
+    post = models.ForeignKey(Post,
+                             on_delete=models.CASCADE)
+    liker = models.ForeignKey(User,
+                              on_delete=models.CASCADE)
 
 
 class Comment(models.Model):

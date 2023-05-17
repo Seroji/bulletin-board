@@ -10,12 +10,36 @@
         </div>
         <div class="col-md-9 text-end">
             <span class="small-icons-post">
-                <a href="#"><img class="small-icons-post-img" src="{% static 'img/icons/favourite_empty.png' %}"></a>
+                {% if is_user_like %}
+                <form style="display: inline-block" id='like'
+                            hx-post="{% url 'like_change' %}"  
+                            hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' 
+                            hx-include="[name='like']"
+                            hx-swap="outerHTML"
+                            hx-target="#likeimage">
+                    <input type=hidden name="like" value="{{ obj.id }}">
+                </form>
+                <button form="like" id='sub-button' type="submit" class="inline-button-in-detail-view">
+                    <img class="small-icons-post-img" id="likeimage" src="{% static 'img/icons/favourite_filled.png' %}">
+                </button>
+                {% else %}
+                <form style="display: inline-block" id='like'
+                            hx-post="{% url 'like_change' %}"  
+                            hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' 
+                            hx-include="[name='like']"
+                            hx-swap="outerHTML"
+                            hx-target="#likeimage">
+                    <input type=hidden name="like" value="{{ obj.id }}">
+                </form>
+                <button form="like" id='sub-button' type="submit" class="inline-button-in-detail-view">
+                    <img class="small-icons-post-img" id="likeimage" src="{% static 'img/icons/favourite_empty.png' %}">
+                </button>
+                {% endif %}
                 {% if is_user_follower %}
                 <form style="display: inline-block" id='sub'
                             hx-post="{% url 'follower_change' %}"  
                             hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' 
-                            hx-include="[id='post_id']"
+                            hx-include="[name='id']"
                             hx-swap="outerHTML"
                             hx-target="#subimage">
                     <input type=hidden name="id" value="{{ obj.id }}">
@@ -27,7 +51,7 @@
                 <form style="display: inline-block" id='sub'
                             hx-post="{% url 'follower_change' %}"  
                             hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' 
-                            hx-include="[id='post_id']"
+                            hx-include="[name='id']"
                             hx-swap="outerHTML"
                             hx-target="#subimage">
                     <input type=hidden name="id" value="{{ obj.id }}">

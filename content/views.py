@@ -1,9 +1,10 @@
+from typing import Any, Dict
 from django.shortcuts import render, HttpResponse, HttpResponseRedirect, redirect
 from django.views import generic, View
 
 from rest_framework import generics
 
-from .models import Post, Comment, Reply, PostUserFavourite
+from .models import Post, Comment, Reply, PostUserFavourite, PostUserLike
 
 
 class MainPageView(generic.ListView):
@@ -17,6 +18,14 @@ class MainPageView(generic.ListView):
         if self.request.htmx:
             return "partials/main_page_elements.html"
         return "main_page.html"
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        follow_posts = PostUserFavourite.objects.filter(follower=self.request.user).values_list('post_id', flat=True)
+        liked_posts = PostUserLike.objects.filter(liker=self.request.user).values_list('post_id', flat=True)
+        context['follow_posts'] = follow_posts
+        context['liked_posts'] = liked_posts
+        return context
 
 
 class MainProfileView(generic.DetailView):
@@ -69,21 +78,13 @@ class PostDetailView(generic.DetailView):
         user_id = self.request.user.id
         post_id = self.kwargs['pk']
         is_user_follower = PostUserFavourite.objects.filter(post_id=post_id, follower_id=user_id).exists()
+        is_user_like = PostUserLike.objects.filter(post_id=post_id, liker_id=user_id).exists()
         context['is_user_follower'] = is_user_follower
+        context['is_user_like'] = is_user_like
         return context
 
-    # def post(self, request, *args, **kwargs):
-    #     post_id = self.kwargs['pk']
-    #     user_id = self.request.user.id
-    #     if 'sub' in self.request.POST and not PostUserFavourite.objects.filter(follower_id=user_id, post_id=post_id).exists():
-    #         obj = PostUserFavourite.objects.create(
-    #             follower_id=user_id,
-    #             post_id=post_id
-    #         )
-    #         obj.save()
-    #     return HttpResponseRedirect(self.request.path_info)
-    
 
+#htmx
 class FollowThePostView(View):
     def post(self, request, *args, **kwargs):
         post_id = self.request.POST.get('id')
@@ -98,3 +99,21 @@ class FollowThePostView(View):
         else:
             PostUserFavourite.objects.get(follower_id=user_id, post_id=post_id).delete()
             return render(self.request, 'htmx-responces/follow-responce-remove.html')
+        
+
+#htmx
+class LikeThePostView(View):
+    def post(self, request, *args, **kwargs):
+        post_id = self.request.POST.get('like')
+        user_id = self.request.user.id
+        if not PostUserLike.objects.filter(liker_id=user_id, post_id=post_id).exists():
+            obj = PostUserLike.objects.create(
+                liker_id=user_id,
+                post_id=post_id
+            )
+            obj.save()
+            return render(self.request, 'htmx-responces/like-responce.html')
+        else:
+            PostUserLike.objects.get(liker_id=user_id, post_id=post_id).delete()
+            return render(self.request, 'htmx-responces/dislike-responce.html')
+        

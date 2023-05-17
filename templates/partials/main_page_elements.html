@@ -1,7 +1,7 @@
 {% load static %}
 {% load custom_filters %}
 
-{% for announcement in announcements %}
+{% for post in announcements %}
 {% if forloop.last %}
 <div class="container announce-block" hx-get="{% url 'main_page' %}?page={{ page_obj.number|add:1 }}" hx-trigger="revealed" hx-swap="afterend" hx-target="this">
 {% else %}
@@ -9,23 +9,32 @@
 {% endif %}
     <div class="row">
         <div class="col-md-12">
-            <span><a href="#" class="post-author">{{ announcement.author }}</a>, <span class="time-next-to-username">{{ announcement.time_in }}</span></span>
+            <span><a href="#" class="post-author">{{ post.author }}</a>, <span class="time-next-to-username">{{ post.time_in }}</span></span>
             <div class="post-content">
                 <div class="row">
                     <div class="col-md-4">
-                        <p><img class="image-cover-post" src="{{ announcement.cover.url }}"></p>
+                        <p><img class="image-cover-post" src="{{ post.cover.url }}"></p>
                     </div>
                     <div class="col-md-8 text-center my-auto">
-                        <p><a href="detail/{{ announcement.id }}" class="post-link mx-auto">{{ announcement.title }}</a></p>                        
+                        <p><a href="detail/{{ post.id }}" class="post-link mx-auto">{{ post.title }}</a></p>                        
                     </div>
             </div>
             <div class="row">
                 <div class="col-md-4">
             <span class="small-icons-post">
-                <a href="#"><img class="small-icons-post-img" src="{% static 'img/icons/favourite_empty.png' %}"></a>
-                {{ announcement.like }}
-                <a href="#"><img class="small-icons-post-img" src="{% static 'img/icons/bookmark_not_add.png' %}"></a>
-                {{ announcement.id |total_followers }}
+                {% if post.id in liked_posts %}
+                    <img class="small-icons-post-img" id="subimage" src="{% static 'img/icons/favourite_filled.png' %}">
+                {% else %}
+                    <img class="small-icons-post-img" id="subimage" src="{% static 'img/icons/favourite_empty.png' %}">
+                {% endif %}
+                {{ post.like }}
+                {{ post.id |total_likes }}
+                {% if post.id in follow_posts %}
+                    <img class="small-icons-post-img" id="subimage" src="{% static 'img/icons/bookmark_add.png' %}">
+                {% else %}
+                    <img class="small-icons-post-img" id="subimage" src="{% static 'img/icons/bookmark_not_add.png' %}">
+                {% endif %}
+                {{ post.id |total_followers }}
             </span>
                 </div>
                 <div class="col-md-8">
