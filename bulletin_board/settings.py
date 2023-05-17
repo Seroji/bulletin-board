@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'django_htmx',
     'rest_framework',
+    'image_uploader_widget',
 ]
 
 MIDDLEWARE = [

@@ -1,0 +1,33 @@
+{% extends 'flatpages/default.html' %}
+
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <form method="post">
+                {% csrf_token %}
+                <div class="fieldWrapper profile-change-form">
+                    {{ form.cover.label_tag }}
+                    {{ form.cover }}
+                </div>
+                <div class="fieldWrapper profile-change-form">
+                    {{ form.category.label_tag }}
+                    {{ form.category }}
+                </div>
+                <div class="fieldWrapper profile-change-form">
+                    {{ form.title.label_tag }}
+                    {{ form.title }}
+                </div>
+                <div class="fieldWrapper profile-change-form">
+                    {{ form.content.label_tag }}
+                    {{ form.media }}
+                    {{ form.content }}
+                </div>
+                <button type="submit">Подтвердить</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}

@@ -15,4 +15,7 @@ def total_followers(args):
 @register.filter
 def total_likes(args):
     total = PostUserLike.objects.filter(post_id=args).count()
-    return total
+    if total:
+        return total
+    else:
+        return 0

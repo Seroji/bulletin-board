@@ -12,6 +12,7 @@ from .views import (
     ProfileChangeView,
     AfterChangeProfileView,
     PasswordEditView,
+    PostAddView,
 )
 
 
@@ -22,6 +23,7 @@ urlpatterns = [
     path("detail/<int:pk>/", PostDetailView.as_view(), name='post_detail'),
     path('profile/change/', ProfileChangeView.as_view(), name='profile_change'),
     path('profile/paswword/', PasswordEditView.as_view(), name='password_change'),
+    path('add/', PostAddView.as_view(), name='post_add'),
 ]
 
 htmx_patterns = [

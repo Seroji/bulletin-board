@@ -3,6 +3,10 @@ from tinymce.models import HTMLField
 from django.contrib.auth.models import User
 
 
+def user_directory_path(instance, filename):
+    return 'user_{0}/{1}'.format(instance.user.id, filename)
+
+
 class Category(models.Model):
     category = models.CharField(max_length=64)
 
@@ -19,9 +23,13 @@ class Post(models.Model):
                                related_name='posts', 
                                on_delete=models.CASCADE)
     content = HTMLField(default=None)
-    cover = models.ImageField(upload_to='news_cover/')  #Настроить генераци+ю случайного неповторяющегося имени файла
+    cover = models.ImageField(upload_to=user_directory_path)
     follow = models.ManyToManyField(User,
-                                    through='PostUserFavourite')
+                                    through='PostUserFavourite',
+                                    related_name='postsfollow')
+    like = models.ManyToManyField(User,
+                                  through='PostUserLike',
+                                  related_name='postslike')
 
 
 class PostCategory(models.Model):

@@ -27,7 +27,6 @@
                 {% else %}
                     <img class="small-icons-post-img" id="subimage" src="{% static 'img/icons/favourite_empty.png' %}">
                 {% endif %}
-                {{ post.like }}
                 {{ post.id |total_likes }}
                 {% if post.id in follow_posts %}
                     <img class="small-icons-post-img" id="subimage" src="{% static 'img/icons/bookmark_add.png' %}">

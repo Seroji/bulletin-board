@@ -108,3 +108,8 @@ img {
 .password-change-back:hover {
     color: grey;
 }
+
+.widget-image {
+    height: 100px;
+    width: 100px;
+}

@@ -2,6 +2,25 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import PasswordChangeForm
 from django import forms
 
+from tinymce.widgets import TinyMCE
+from image_uploader_widget.widgets import ImageUploaderWidget
+
+from .models import Post
+
+
+CHOICES_CATEGORY = [
+    (1, 'Танки'),
+    (2, 'Хилы'),
+    (3, 'ДД'),
+    (4, 'Торговцы'),
+    (5, 'Гилдмастеры'),
+    (6, 'Квестгиверы'),
+    (7, 'Кузнецы'),
+    (8, 'Кожевники'),
+    (9, 'Зельевары'),
+    (10, 'Мастера заклинаний'),
+]
+
 
 class ProfileChangeForm(forms.ModelForm):
     first_name = forms.CharField(max_length=50, label='Имя', widget=forms.TextInput(attrs={'class': 'form-control', 'type': 'text'}))
@@ -30,4 +49,22 @@ class PasswordEditForm(PasswordChangeForm):
             'old_password',
             'new_password1',
             'new_password2',
+        )
+
+
+class PostAddForm(forms.ModelForm):
+    title = forms.CharField(label='Заголовок', widget=forms.TextInput(attrs={'class': 'form-control', 'type': 'text'}))
+    content = forms.CharField(label='Содержание', widget=TinyMCE())
+    category = forms.ChoiceField(
+                                label='Категория',
+                                choices=CHOICES_CATEGORY,
+                                 widget=forms.Select(attrs={'class': 'form-select form-select-sm'}))
+    cover = forms.ImageField(label='Обложка' ,widget=ImageUploaderWidget())
+    class Meta:
+        model = Post
+        fields = (
+            'cover',
+            'title',
+            'category',
+            'content',
         )

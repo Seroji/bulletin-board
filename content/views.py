@@ -1,12 +1,13 @@
 from typing import Any, Optional
 from django.db import models
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, HttpResponse
 from django.views import generic, View
 from django.urls import reverse_lazy
 from django.contrib.auth.views import PasswordChangeView
 
-from .models import Post, Reply, PostUserFavourite, PostUserLike
-from .forms import ProfileChangeForm, PasswordEditForm
+from .models import Post, Reply, PostUserFavourite, PostUserLike, PostCategory
+from .forms import ProfileChangeForm, PasswordEditForm, PostAddForm
 
 
 class MainPageView(generic.ListView):
@@ -139,3 +140,24 @@ class PasswordEditView(PasswordChangeView):
     form_class = PasswordEditForm
     template_name = 'profile/password_change.html'
     success_url = reverse_lazy('main_profile')
+
+
+class PostAddView(generic.CreateView):
+    model = Post
+    form_class = PostAddForm
+    template_name = 'post_add.html'
+    success_url = reverse_lazy('main_page')
+
+    def post(self, request, *args, **kwargs):
+        post = Post(
+            title = request.POST['title'],
+            author = self.request.user,
+            content = request.POST['content'],
+            cover = request.POST['cover']
+        )
+        post.save()
+        PostCategory.objects.create(
+            post=post,
+            category_id=request.POST['category'],
+        )
+        return HttpResponse('Success')
