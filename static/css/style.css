@@ -72,6 +72,7 @@ img {
 
 .post-link:hover {
     color: #303b44;
+    cursor: pointer;
 }
 
 .announce-block {
@@ -91,4 +92,8 @@ img {
 .inline-button-in-detail-view {
     background-color: #fff;
     border: None;
+}
+
+.profile-change-form {
+    padding: 5px;
 }

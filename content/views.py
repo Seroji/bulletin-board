@@ -1,10 +1,11 @@
-from typing import Any, Dict
-from django.shortcuts import render, HttpResponse, HttpResponseRedirect, redirect
+from typing import Any, Optional
+from django.db import models
+from django.shortcuts import render, HttpResponse
 from django.views import generic, View
+from django.urls import reverse_lazy
 
-from rest_framework import generics
-
-from .models import Post, Comment, Reply, PostUserFavourite, PostUserLike
+from .models import Post, Reply, PostUserFavourite, PostUserLike
+from .forms import ProfileChangeForm
 
 
 class MainPageView(generic.ListView):
@@ -117,3 +118,17 @@ class LikeThePostView(View):
             PostUserLike.objects.get(liker_id=user_id, post_id=post_id).delete()
             return render(self.request, 'htmx-responces/dislike-responce.html')
         
+
+class ProfileChangeView(generic.UpdateView):
+    form_class = ProfileChangeForm
+    template_name = 'profile/profile_change.html'
+    success_url = reverse_lazy('after_change')
+
+    def get_object(self):
+        return self.request.user
+        
+
+#htmx
+class AfterChangeProfileView(View):
+    def get(self, request, *args, **kwargs):
+        return render(self.request, 'partials/after_change_profile.html')

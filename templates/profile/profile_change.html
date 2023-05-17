@@ -1,0 +1,21 @@
+<form method="post" id="form" hx-post="{% url 'profile_change' %}" hx-target="this">
+    {% csrf_token %}
+    <div class="fieldWrapper profile-change-form">
+        {{ form.first_name.label_tag }}
+        {{ form.first_name }}
+    </div>
+    <div class="fieldWrapper profile-change-form">
+        {{ form.last_name.label_tag }}
+        {{ form.last_name }}
+    </div>
+    <div class="fieldWrapper profile-change-form">
+        {{ form.username.label_tag }}
+        {{ form.username }}
+    </div>
+    <div class="fieldWrapper profile-change-form">
+        {{ form.email.label_tag }}
+        {{ form.email }}
+    </div>
+    <br>
+    <button type="submit" class="btn btn-primary">Подтвердить</button>
+</form>
