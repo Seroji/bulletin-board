@@ -1,8 +1,9 @@
-from typing import Any, Dict, List
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render, HttpResponse, HttpResponseRedirect, redirect
 from django.views import generic, View
 
-from .models import Post, Comment, Reply
+from rest_framework import generics
+
+from .models import Post, Comment, Reply, PostUserFavourite
 
 
 class MainPageView(generic.ListView):
@@ -62,3 +63,38 @@ class PostDetailView(generic.DetailView):
     model = Post
     template_name = 'detail_view.html'
     context_object_name = 'obj'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        user_id = self.request.user.id
+        post_id = self.kwargs['pk']
+        is_user_follower = PostUserFavourite.objects.filter(post_id=post_id, follower_id=user_id).exists()
+        context['is_user_follower'] = is_user_follower
+        return context
+
+    # def post(self, request, *args, **kwargs):
+    #     post_id = self.kwargs['pk']
+    #     user_id = self.request.user.id
+    #     if 'sub' in self.request.POST and not PostUserFavourite.objects.filter(follower_id=user_id, post_id=post_id).exists():
+    #         obj = PostUserFavourite.objects.create(
+    #             follower_id=user_id,
+    #             post_id=post_id
+    #         )
+    #         obj.save()
+    #     return HttpResponseRedirect(self.request.path_info)
+    
+
+class FollowThePostView(View):
+    def post(self, request, *args, **kwargs):
+        post_id = self.request.POST.get('id')
+        user_id = self.request.user.id
+        if not PostUserFavourite.objects.filter(follower_id=user_id, post_id=post_id).exists():
+            obj = PostUserFavourite.objects.create(
+                follower_id=user_id,
+                post_id=post_id
+            )
+            obj.save()
+            return render(self.request, 'htmx-responces/follow-responce-add.html')
+        else:
+            PostUserFavourite.objects.get(follower_id=user_id, post_id=post_id).delete()
+            return render(self.request, 'htmx-responces/follow-responce-remove.html')

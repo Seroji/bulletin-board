@@ -1,11 +1,42 @@
 {% extends 'flatpages/default.html' %}
 
+{% load static %}
 
 {% block content %}
 <div class="container">
     <div class="row">
-        <div class="col text-start">
+        <div class="col-md-3 text-start">
             {{ obj.author }}, {{ obj.time_in }}
+        </div>
+        <div class="col-md-9 text-end">
+            <span class="small-icons-post">
+                <a href="#"><img class="small-icons-post-img" src="{% static 'img/icons/favourite_empty.png' %}"></a>
+                {% if is_user_follower %}
+                <form style="display: inline-block" id='sub'
+                            hx-post="{% url 'follower_change' %}"  
+                            hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' 
+                            hx-include="[id='post_id']"
+                            hx-swap="outerHTML"
+                            hx-target="#subimage">
+                    <input type=hidden name="id" value="{{ obj.id }}">
+                </form>
+                <button form="sub" id='sub-button' type="submit" class="inline-button-in-detail-view">
+                    <img class="small-icons-post-img" id="subimage" src="{% static 'img/icons/bookmark_add.png' %}">
+                </button>
+                {% else %}
+                <form style="display: inline-block" id='sub'
+                            hx-post="{% url 'follower_change' %}"  
+                            hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' 
+                            hx-include="[id='post_id']"
+                            hx-swap="outerHTML"
+                            hx-target="#subimage">
+                    <input type=hidden name="id" value="{{ obj.id }}">
+                </form>
+                <button form="sub" id='sub-button' type="submit" class="inline-button-in-detail-view">
+                    <img class="small-icons-post-img" id="subimage" src="{% static 'img/icons/bookmark_not_add.png' %}">
+                </button>
+                {% endif %}
+            </span>
         </div>
     </div>
     <div class="row">
@@ -15,4 +46,5 @@
         </div>
     </div>
 </div>
+<div id="response"></div>
 {% endblock content %}

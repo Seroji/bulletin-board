@@ -87,3 +87,8 @@ img {
 .profile-content {
     padding: 15px;
 }
+
+.inline-button-in-detail-view {
+    background-color: #fff;
+    border: None;
+}

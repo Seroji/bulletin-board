@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'content',
     'widget_tweaks',
     'django_htmx',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
