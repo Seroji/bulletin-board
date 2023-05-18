@@ -149,6 +149,9 @@ class PostAddView(generic.CreateView):
     success_url = reverse_lazy('main_page')
 
     def post(self, request, *args, **kwargs):
+        form = PostAddForm(request.POST, request.FILES)
+        if not request.FILES:
+            return render(request, self.template_name, {'form': form})
         post = Post(
             title = request.POST['title'],
             author = self.request.user,
@@ -161,3 +164,6 @@ class PostAddView(generic.CreateView):
             category_id=request.POST['category'],
         )
         return HttpResponse('Success')
+    
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name, {'form': PostAddForm})

@@ -1,5 +1,7 @@
+from typing import Any, Dict
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import PasswordChangeForm
+from django.core.exceptions import ValidationError
 from django import forms
 
 from tinymce.widgets import TinyMCE
@@ -59,7 +61,7 @@ class PostAddForm(forms.ModelForm):
                                 label='Категория',
                                 choices=CHOICES_CATEGORY,
                                  widget=forms.Select(attrs={'class': 'form-select form-select-sm'}))
-    cover = forms.ImageField(label='Обложка', widget=ImageUploaderWidget)
+    cover = forms.ImageField(label='Обложка', widget=ImageUploaderWidget, required=False)
     class Meta:
         model = Post
         fields = (

@@ -168,6 +168,7 @@ DIRECTORY = ''
 X_FRAME_OPTIONS = 'SAMEORIGIN'
 
 TINYMCE_DEFAULT_CONFIG = {
+    "height": "700px",
     "relative_urls": False,
     "remove_script_host": False,
     "convert_urls": True,

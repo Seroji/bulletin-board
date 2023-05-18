@@ -1,33 +1,45 @@
 {% extends 'flatpages/default.html' %}
 
+{% load widget_tweaks %}
 {% load static %}
 
 {% block content %}
 <div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <form method="post" enctype="multipart/form-data">
-                {% csrf_token %}
+    <form method="post" enctype="multipart/form-data" class="profile-change-form" id="postadd">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        <div class="row">
+            <div class="col-md-3">
                 <div class="fieldWrapper profile-change-form">
+                    {{ form.cover.errors }}
                     {{ form.cover.label_tag }}
                     {{ form.cover }}
                 </div>
+            </div>
+            <div class="col-md-9 my-auto">
+            <div class="row profile-change-form">
                 <div class="fieldWrapper profile-change-form">
                     {{ form.category.label_tag }}
                     {{ form.category }}
                 </div>
+                </div>
+                <div class="row profile-change-form">
                 <div class="fieldWrapper profile-change-form">
+                    {{ form.title.errors }}
                     {{ form.title.label_tag }}
                     {{ form.title }}
                 </div>
+                </div>
+            </div>
                 <div class="fieldWrapper profile-change-form">
+                    {{ form.content.errors }}
                     {{ form.content.label_tag }}
                     {{ form.media }}
                     {{ form.content }}
                 </div>
-                <button type="submit">Подтвердить</button>
-            </form>
+                <br>
+            <button type="submit" class="btn btn-primary" form="postadd">Опубликовать</button>
         </div>
-    </div>
+    </form>
 </div>
 {% endblock content %}

@@ -19,7 +19,7 @@ class Post(models.Model):
                                related_name='posts', 
                                on_delete=models.CASCADE)
     content = HTMLField(default=None)
-    cover = models.ImageField(upload_to='cover/', blank=True)
+    cover = models.ImageField(upload_to='cover/')
     follow = models.ManyToManyField(User,
                                     through='PostUserFavourite',
                                     related_name='postsfollow')
