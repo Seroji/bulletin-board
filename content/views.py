@@ -153,7 +153,7 @@ class PostAddView(generic.CreateView):
             title = request.POST['title'],
             author = self.request.user,
             content = request.POST['content'],
-            cover = request.POST['cover']
+            cover = request.FILES['cover']
         )
         post.save()
         PostCategory.objects.create(

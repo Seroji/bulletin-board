@@ -6,3 +6,7 @@ from .models import *
 admin.site.register(Post)
 admin.site.register(Comment)
 admin.site.register(Category)
+admin.site.register(Reply)
+admin.site.register(PostCategory)
+admin.site.register(PostUserFavourite)
+admin.site.register(PostUserLike)

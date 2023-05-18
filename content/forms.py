@@ -59,7 +59,7 @@ class PostAddForm(forms.ModelForm):
                                 label='Категория',
                                 choices=CHOICES_CATEGORY,
                                  widget=forms.Select(attrs={'class': 'form-select form-select-sm'}))
-    cover = forms.ImageField(label='Обложка' ,widget=ImageUploaderWidget())
+    cover = forms.ImageField(label='Обложка', widget=ImageUploaderWidget)
     class Meta:
         model = Post
         fields = (
