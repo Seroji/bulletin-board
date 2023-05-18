@@ -1,6 +1,5 @@
 {% extends 'flatpages/default.html' %}
 
-{% load widget_tweaks %}
 {% load static %}
 
 {% block content %}
@@ -38,7 +37,14 @@
                     {{ form.content }}
                 </div>
                 <br>
-            <button type="submit" class="btn btn-primary" form="postadd">Опубликовать</button>
+                <div class="row">
+                    <div class="col-md-3">
+                        <button type="submit" class="btn btn-primary" form="postadd">Опубликовать</button>
+                    </div>
+                    <div class="col-md-9 text-end">
+                        <a class="post-link" href="{% url 'main_page' %}">Назад</a>
+                    </div>
+                </div>
         </div>
     </form>
 </div>

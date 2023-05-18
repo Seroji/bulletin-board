@@ -163,7 +163,4 @@ class PostAddView(generic.CreateView):
             post=post,
             category_id=request.POST['category'],
         )
-        return HttpResponse('Success')
-    
-    def get(self, request, *args, **kwargs):
-        return render(request, self.template_name, {'form': PostAddForm})
+        return reverse_lazy('main_page')
