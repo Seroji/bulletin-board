@@ -5,9 +5,10 @@ from django.shortcuts import render, HttpResponse
 from django.views import generic, View
 from django.urls import reverse_lazy
 from django.contrib.auth.views import PasswordChangeView
+from django.views.generic.edit import FormMixin
 
-from .models import Post, Reply, PostUserFavourite, PostUserLike, PostCategory
-from .forms import ProfileChangeForm, PasswordEditForm, PostAddForm
+from .models import Post, Reply, PostUserFavourite, PostUserLike, PostCategory, Reply
+from .forms import ProfileChangeForm, PasswordEditForm, PostAddForm, ReplyAddForm
 
 
 class MainPageView(generic.ListView):
@@ -71,20 +72,44 @@ class TotalRepleisView(View):
     
 
 
-class PostDetailView(generic.DetailView):
+class PostDetailView(generic.DetailView, FormMixin):
     model = Post
     template_name = 'detail_view.html'
     context_object_name = 'obj'
+    form_class = ReplyAddForm
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
-        user_id = self.request.user.id
+        user = self.request.user
         post_id = self.kwargs['pk']
-        is_user_follower = PostUserFavourite.objects.filter(post_id=post_id, follower_id=user_id).exists()
-        is_user_like = PostUserLike.objects.filter(post_id=post_id, liker_id=user_id).exists()
+        is_user_follower = PostUserFavourite.objects.filter(post_id=post_id, follower=user).exists()
+        is_user_like = PostUserLike.objects.filter(post_id=post_id, liker=user).exists()
+        is_user_reply = Reply.objects.filter(author=user, post_id=post_id).exists()
         context['is_user_follower'] = is_user_follower
         context['is_user_like'] = is_user_like
+        context['is_user_reply'] = is_user_reply
         return context
+    
+    def post(self, request, *args, **kwargs):
+        form = ReplyAddForm()
+        post_id = self.kwargs['pk']
+        user = self.request.user
+        reply_text = self.request.POST['text']
+        obj = Post.objects.get(pk=post_id)
+        reply = Reply.objects.create(
+            post_id=post_id,
+            author=user,
+            text=reply_text,
+        )
+        reply.save()
+        is_user_follower = PostUserFavourite.objects.filter(post_id=post_id, follower=user).exists()
+        is_user_like = PostUserLike.objects.filter(post_id=post_id, liker=user).exists()
+        is_user_reply = Reply.objects.filter(author=user, post_id=post_id).exists()
+        return render(request, self.template_name, {'obj':obj, 
+                                                    'form': form, 
+                                                    'is_user_follower': is_user_follower,
+                                                    'is_user_like': is_user_like,
+                                                    'is_user_reply': is_user_reply,})
 
 
 #htmx

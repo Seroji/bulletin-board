@@ -7,7 +7,7 @@ from django import forms
 from tinymce.widgets import TinyMCE
 from image_uploader_widget.widgets import ImageUploaderWidget
 
-from .models import Post
+from .models import Post, Reply
 
 
 CHOICES_CATEGORY = [
@@ -69,4 +69,13 @@ class PostAddForm(forms.ModelForm):
             'title',
             'category',
             'content',
+        )
+
+
+class ReplyAddForm(forms.ModelForm):
+    text = forms.CharField(label='Ваш отклик:', widget=forms.Textarea(attrs={'class': 'form-control', 'type': 'text',}))
+    class Meta:
+        model = Reply
+        fields = (
+            'text',
         )
