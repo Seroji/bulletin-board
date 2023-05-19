@@ -3,9 +3,11 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import PasswordChangeForm
 from django.core.exceptions import ValidationError
 from django import forms
+from django.contrib.auth.forms import UserCreationForm
 
 from tinymce.widgets import TinyMCE
 from image_uploader_widget.widgets import ImageUploaderWidget
+from allauth.account.forms import LoginForm
 
 from .models import Post, Reply
 
@@ -78,4 +80,38 @@ class ReplyAddForm(forms.ModelForm):
         model = Reply
         fields = (
             'text',
+        )
+
+    
+class CustomLoginForm(LoginForm):
+    def __init__(self, *args, **kwargs):
+        super(CustomLoginForm, self).__init__(*args, **kwargs)
+        self.fields['login'].widget.attrs.update({
+            'class': 'form-control mx-auto',
+            'type': 'email',
+            'style':'width:500px',
+        })
+        self.fields['password'].widget.attrs.update({
+            'class': 'form-control mx-auto',
+            'type': 'password',
+            'style':'width:500px',
+        })
+
+
+class CustomRegisterForm(UserCreationForm):
+    email = forms.CharField(label='Электронная почта', widget=forms.EmailInput(attrs={'class': 'form-control', 'type': 'email', 'style': 'width:500px'}), required=True)
+    first_name = forms.CharField(label='Имя', widget=forms.TextInput(attrs={'class': 'form-control', 'type': 'text', 'style': 'width:500px'}), required=True)
+    last_name = forms.CharField(label='Фамилия', widget=forms.TextInput(attrs={'class': 'form-control', 'type': 'text', 'style': 'width:500px'}))
+    username = forms.CharField(label='Имя пользователя', widget=forms.TextInput(attrs={'class': 'form-control', 'type': 'text', 'style': 'width:500px'}), required=True)
+    password1 = forms.CharField(label='Пароль', widget=forms.PasswordInput(attrs={'class': 'form-control', 'type': 'password', 'style': 'width:500px'}), required=True)
+    password2 = forms.CharField(label='Повторите пароль', widget=forms.PasswordInput(attrs={'class': 'form-control', 'type': 'password', 'style': 'width:500px'}), required=True)
+    class Meta:
+        model = User
+        fields = (
+            'email',
+            'first_name',
+            'last_name',
+            'username',
+            'password1',
+            'password2',
         )

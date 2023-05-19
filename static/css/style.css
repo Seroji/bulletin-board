@@ -113,3 +113,12 @@ img {
     height: 100px;
     width: 100px;
 }
+
+.provider-login-list {
+    width: 100px;
+}
+
+.login-table {  
+    border-collapse: separate;
+    border-spacing: 20px 0;
+}

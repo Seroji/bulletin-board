@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 import os
 from pathlib import Path
 
+from django.urls import reverse_lazy
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -48,6 +50,10 @@ INSTALLED_APPS = [
     'django_htmx',
     'rest_framework',
     'image_uploader_widget',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
 ]
 
 MIDDLEWARE = [
@@ -69,6 +75,7 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             os.path.join(BASE_DIR, 'templates/'),
+            os.path.join(BASE_DIR, 'templates/allauth/')
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -77,6 +84,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.request',
             ],
         },
     },
@@ -116,6 +124,34 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+
+#AllAuth
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'APP': {
+            'client_id': '1091708260808-0pn5hro21d4cu1ee5k1a9frj2ot8lu7c.apps.googleusercontent.com',
+            'secret': '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',
+            'key': '',
+        }
+    }
+}
+
+LOGIN_URL = 'account_login'
+LOGIN_REDIRECT_URL = 'main_page'
+
+ACCOUNT_FORMS = {
+    'login': 'content.forms.CustomLoginForm',
+    'signup': 'content.forms.CustomRegisterForm',
+}
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+ACCOUNT_EMAIL_VERIFICATION = False
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/

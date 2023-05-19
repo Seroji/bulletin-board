@@ -6,12 +6,13 @@ from django.views import generic, View
 from django.urls import reverse_lazy
 from django.contrib.auth.views import PasswordChangeView
 from django.views.generic.edit import FormMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import Post, Reply, PostUserFavourite, PostUserLike, PostCategory, Reply
 from .forms import ProfileChangeForm, PasswordEditForm, PostAddForm, ReplyAddForm
 
 
-class MainPageView(generic.ListView):
+class MainPageView(LoginRequiredMixin, generic.ListView):
     model = Post
     context_object_name = "announcements"
     template_name = "main_page.html"
@@ -25,10 +26,11 @@ class MainPageView(generic.ListView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
-        follow_posts = PostUserFavourite.objects.filter(follower=self.request.user).values_list('post_id', flat=True)
-        liked_posts = PostUserLike.objects.filter(liker=self.request.user).values_list('post_id', flat=True)
-        context['follow_posts'] = follow_posts
-        context['liked_posts'] = liked_posts
+        if self.request.user.is_authenticated:
+            follow_posts = PostUserFavourite.objects.filter(follower=self.request.user).values_list('post_id', flat=True)
+            liked_posts = PostUserLike.objects.filter(liker=self.request.user).values_list('post_id', flat=True)
+            context['follow_posts'] = follow_posts
+            context['liked_posts'] = liked_posts
         return context
 
 
