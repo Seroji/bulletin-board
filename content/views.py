@@ -1,7 +1,6 @@
 from typing import Any, Optional
 from django.db import models
-from django.http import HttpRequest, HttpResponse
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render, HttpResponse, redirect
 from django.views import generic, View
 from django.urls import reverse_lazy
 from django.contrib.auth.views import PasswordChangeView
@@ -178,6 +177,7 @@ class PostAddView(generic.CreateView):
     def post(self, request, *args, **kwargs):
         form = PostAddForm(request.POST, request.FILES)
         if not request.FILES:
+            print('123')
             return render(request, self.template_name, {'form': form})
         post = Post(
             title = request.POST['title'],
@@ -190,4 +190,5 @@ class PostAddView(generic.CreateView):
             post=post,
             category_id=request.POST['category'],
         )
-        return reverse_lazy('main_page')
+        announcements = Post.objects.all()
+        return redirect(to='main_page')
