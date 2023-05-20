@@ -11,7 +11,7 @@ from .models import Post, Reply, PostUserFavourite, PostUserLike, PostCategory, 
 from .forms import ProfileChangeForm, PasswordEditForm, PostAddForm, ReplyAddForm
 
 
-class MainPageView(LoginRequiredMixin, generic.ListView):
+class MainPageView(generic.ListView):
     model = Post
     context_object_name = "announcements"
     template_name = "main_page.html"
@@ -33,19 +33,19 @@ class MainPageView(LoginRequiredMixin, generic.ListView):
         return context
 
 
-class MainProfileView(generic.DetailView):
+class MainProfileView(LoginRequiredMixin, generic.DetailView):
     def get(self, request):
         return render(request, "profile/profile.html")
     
 
 #htmx
-class MainProfileGetView(View):
+class MainProfileGetView(LoginRequiredMixin, View):
     def get(self, request):
         return render(request, 'partials/profile_main.html')
     
 
 #htmx
-class StatProfileGetView(View):
+class StatProfileGetView(LoginRequiredMixin, View):
     def get(self, request):
         count = 0
         all_posts = Post.objects.filter(author_id=self.request.user.id)
@@ -57,7 +57,7 @@ class StatProfileGetView(View):
         return render(request, 'partials/profile_stat.html', context=context)
     
 
-class TotalRepleisView(View):
+class TotalRepleisView(LoginRequiredMixin, View):
     def get(self, request):
         replies = []
         all_posts = Post.objects.filter(author_id=self.request.user.id)
@@ -81,14 +81,15 @@ class PostDetailView(generic.DetailView, FormMixin):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
-        user = self.request.user
-        post_id = self.kwargs['pk']
-        is_user_follower = PostUserFavourite.objects.filter(post_id=post_id, follower=user).exists()
-        is_user_like = PostUserLike.objects.filter(post_id=post_id, liker=user).exists()
-        is_user_reply = Reply.objects.filter(author=user, post_id=post_id).exists()
-        context['is_user_follower'] = is_user_follower
-        context['is_user_like'] = is_user_like
-        context['is_user_reply'] = is_user_reply
+        if self.request.user.is_authenticated:
+            user = self.request.user
+            post_id = self.kwargs['pk']
+            is_user_follower = PostUserFavourite.objects.filter(post_id=post_id, follower=user).exists()
+            is_user_like = PostUserLike.objects.filter(post_id=post_id, liker=user).exists()
+            is_user_reply = Reply.objects.filter(author=user, post_id=post_id).exists()
+            context['is_user_follower'] = is_user_follower
+            context['is_user_like'] = is_user_like
+            context['is_user_reply'] = is_user_reply
         return context
     
     def post(self, request, *args, **kwargs):
@@ -114,7 +115,7 @@ class PostDetailView(generic.DetailView, FormMixin):
 
 
 #htmx
-class FollowThePostView(View):
+class FollowThePostView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         post_id = self.request.POST.get('id')
         user_id = self.request.user.id
@@ -131,7 +132,7 @@ class FollowThePostView(View):
         
 
 #htmx
-class LikeThePostView(View):
+class LikeThePostView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         post_id = self.request.POST.get('like')
         user_id = self.request.user.id
@@ -147,7 +148,7 @@ class LikeThePostView(View):
             return render(self.request, 'htmx-responces/dislike-responce.html')
         
 
-class ProfileChangeView(generic.UpdateView):
+class ProfileChangeView(LoginRequiredMixin, generic.UpdateView):
     form_class = ProfileChangeForm
     template_name = 'profile/profile_change.html'
     success_url = reverse_lazy('after_change')
@@ -157,18 +158,18 @@ class ProfileChangeView(generic.UpdateView):
         
 
 #htmx
-class AfterChangeProfileView(View):
+class AfterChangeProfileView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         return render(self.request, 'partials/after_change_profile.html')
 
 
-class PasswordEditView(PasswordChangeView):
+class PasswordEditView(LoginRequiredMixin, PasswordChangeView):
     form_class = PasswordEditForm
     template_name = 'profile/password_change.html'
     success_url = reverse_lazy('main_profile')
 
 
-class PostAddView(generic.CreateView):
+class PostAddView(LoginRequiredMixin, generic.CreateView):
     model = Post
     form_class = PostAddForm
     template_name = 'post_add.html'
