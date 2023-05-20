@@ -72,6 +72,18 @@ class TotalRepleisView(LoginRequiredMixin, View):
         return render(request, 'total_replies.html', context=context)
     
 
+class ReplyActionView(View):
+    def post(self, request, *args, **kwargs):
+        reply_id = self.request.POST.get('obj-id')
+        reply = Reply.objects.get(id=reply_id)
+        if 'apply' in self.request.POST:
+            reply.answer = True
+            reply.save()
+            return HttpResponse('<span style="color: green">Принят</span>')
+        if 'deny' in self.request.POST:
+            reply.delete()
+            return HttpResponse('<span style="color: red">Отклонён</span>')
+
 
 class PostDetailView(generic.DetailView, FormMixin):
     model = Post

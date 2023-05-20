@@ -68,3 +68,5 @@ class Reply(models.Model):
     author = models.ForeignKey(User,
                                on_delete=models.CASCADE)
     text = models.TextField(default='Отклик')
+    answer = models.BooleanField(default=False)
+    time_in = models.DateTimeField(auto_now_add=True)

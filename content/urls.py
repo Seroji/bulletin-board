@@ -13,6 +13,7 @@ from .views import (
     AfterChangeProfileView,
     PasswordEditView,
     PostAddView,
+    ReplyActionView,
 )
 
 
@@ -32,6 +33,7 @@ htmx_patterns = [
     path('follower_change/', FollowThePostView.as_view(), name='follower_change'),
     path('like_change/', LikeThePostView.as_view(), name='like_change'),
     path('after_change/', AfterChangeProfileView.as_view(), name='after_change'),
+    path('reply_action/', ReplyActionView.as_view(), name='reply_action')
 ]
 
 urlpatterns += htmx_patterns
