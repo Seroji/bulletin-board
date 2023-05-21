@@ -1,0 +1,2 @@
+1) Add dynamic search for filters
+2) Configure user choice in the total_replies view

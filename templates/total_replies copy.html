@@ -3,40 +3,13 @@
 {% block content %}
     <div class="container">
         <div class="row">
-            <div class="col-md-12 text-center">
+            <div class="col text-center">
                 <h5>Все отклики на ваши объявления</h5>
                 <br>
-                <div class="d-flex justify-content-center">
                 <form method="get">
-                    {{ filter.form.non_field_errors }}
-                    <table>
-                        <tr>
-                            <td>
-                                <div class="fieldWrapper profile-change-form">
-                                    {{ filter.form.author.errors }}
-                                    {{ filter.form.author.label_tag }}
-                                    {{ filter.form.author }}
-                                </div>
-                            </td>
-                            <td>
-                                <div class="fieldWrapper profile-change-form">
-                                    {{ filter.form.post.errors }}
-                                    {{ filter.form.post.label_tag }}
-                                    {{ filter.form.post }}
-                                </div>
-                            </td>
-                            <td>
-                                <div class="fieldWrapper profile-change-form">
-                                    {{ filter.form.time_in.errors }}
-                                    {{ filter.form.time_in.label_tag }}
-                                    {{ filter.form.time_in }}
-                                </div>
-                            </td>
-                        </tr>
-                    </table>
-                    <button type="submit" class="btn btn-primary">Поиск</button>
+                    {{ filter.form.as_p }}
+                    <input type="submit" value="Отфильтровать">
                 </form>
-                </div>
                 <br>
                     <table class="table table-striped">
                         <tr>
@@ -46,7 +19,7 @@
                             <th>Текст отклика</th>
                             <th>Действие </th>
                         </tr>
-                        {% for obj in filter.qs %}
+                        {% for obj in replies %}
                         <tr>
                             <td>
                                 {{ obj.author }}

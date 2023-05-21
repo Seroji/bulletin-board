@@ -9,6 +9,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import Post, Reply, PostUserFavourite, PostUserLike, PostCategory, Reply
 from .forms import ProfileChangeForm, PasswordEditForm, PostAddForm, ReplyAddForm
+from .filters import ReplyFilter
 
 
 class MainPageView(generic.ListView):
@@ -57,19 +58,17 @@ class StatProfileGetView(LoginRequiredMixin, View):
         return render(request, 'partials/profile_stat.html', context=context)
     
 
-class TotalRepleisView(LoginRequiredMixin, View):
+class TotalRepliesView(LoginRequiredMixin, View):
     def get(self, request):
-        replies = []
-        all_posts = Post.objects.filter(author_id=self.request.user.id)
-        for post in all_posts:
-            obj = Reply.objects.all().filter(post=post)
-            if obj:
-                replies.append(obj[0])
+        replies = Reply.objects.filter(post__author=self.request.user)
+        reply_filter = ReplyFilter(request.GET, queryset=replies)
         context = {
-            'replies': replies,
+            'filter': reply_filter,
         }
-        print(replies)
         return render(request, 'total_replies.html', context=context)
+    
+    def get_users(request):
+        return Reply.objects.all()
     
 
 class ReplyActionView(View):

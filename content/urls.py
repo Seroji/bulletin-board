@@ -5,7 +5,7 @@ from .views import (
     MainProfileView,
     MainProfileGetView,
     StatProfileGetView,
-    TotalRepleisView,
+    TotalRepliesView,
     PostDetailView,
     FollowThePostView,
     LikeThePostView,
@@ -20,7 +20,7 @@ from .views import (
 urlpatterns = [
     path("", MainPageView.as_view(), name="main_page"),
     path("profile/", MainProfileView.as_view(), name="main_profile"),
-    path("replies/", TotalRepleisView.as_view(), name='total_replies'),
+    path("replies/", TotalRepliesView.as_view(), name='total_replies'),
     path("detail/<int:pk>/", PostDetailView.as_view(), name='post_detail'),
     path('profile/change/', ProfileChangeView.as_view(), name='profile_change'),
     path('profile/paswword/', PasswordEditView.as_view(), name='password_change'),
