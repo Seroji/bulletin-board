@@ -11,7 +11,7 @@ from allauth.account.admin import EmailAddress
 from .models import Post, Reply, PostUserFavourite, PostUserLike, PostCategory, Reply
 from .forms import ProfileChangeForm, PasswordEditForm, PostAddForm, ReplyAddForm
 from .filters import ReplyFilter
-from .tasks import reply_info
+from .tasks import reply_info, apply_info
 
 
 class MainPageView(generic.ListView):
@@ -82,6 +82,7 @@ class ReplyActionView(View):
         if 'apply' in self.request.POST:
             reply.answer = True
             reply.save()
+            apply_info.delay(reply_id=reply_id)
             return HttpResponse('<span style="color: green">Принят</span>')
         if 'deny' in self.request.POST:
             reply.delete()
