@@ -1,0 +1,14 @@
+{% extends "account/email/base_message.txt" %}
+{% load account %}
+
+{% block content %}
+{% user_display user as user_display %}
+{% autoescape off %}
+Приветствуем на сайте Bulletin Board!
+Вы получили это сообщение, потому что пользователь {{ user_display }} указал этот E-mail при регистрации.
+
+Для подтверждения регистрации перейдите по ссылке {{ activate_url }}
+{% endautoescape %}
+{% endblock content %}
+
+

@@ -11,6 +11,8 @@ from .models import Post, Reply, PostUserFavourite, PostUserLike, PostCategory, 
 from .forms import ProfileChangeForm, PasswordEditForm, PostAddForm, ReplyAddForm
 from .filters import ReplyFilter
 
+from django.core.mail import send_mail
+
 
 class MainPageView(generic.ListView):
     model = Post

@@ -159,8 +159,24 @@ ACCOUNT_FORMS = {
     'signup': 'content.forms.CustomRegisterForm',
 }
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-ACCOUNT_EMAIL_VERIFICATION = False
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_CONFIRM_EMAIL_ON_GET = True
+# ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_EMAIL_SUBJECT_PREFIX = ''
+
+#Mail
+EMAIL_HOST = 'smtp.mail.ru'
+EMAIL_PORT = 465
+EMAIL_USE_SSL = True
+EMAIL_HOST_USER = 'gamexr6@mail.ru'
+EMAIL_HOST_PASSWORD = '4e8i6ks1hhuizLkb6tNd'
+
+#Error Mail
+# SERVER_EMAIL = EMAIL_HOST_USER
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
@@ -239,3 +255,5 @@ TINYMCE_DEFAULT_CONFIG = {
     'statusbar': True,
     "language": "ru",
 }
+
+
