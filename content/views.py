@@ -11,6 +11,7 @@ from allauth.account.admin import EmailAddress
 from .models import Post, Reply, PostUserFavourite, PostUserLike, PostCategory, Reply
 from .forms import ProfileChangeForm, PasswordEditForm, PostAddForm, ReplyAddForm
 from .filters import ReplyFilter
+from .tasks import reply_info
 
 
 class MainPageView(generic.ListView):
@@ -118,6 +119,7 @@ class PostDetailView(generic.DetailView, FormMixin):
             text=reply_text,
         )
         reply.save()
+        reply_info.delay(post_id=post_id)
         is_user_follower = PostUserFavourite.objects.filter(post_id=post_id, follower=user).exists()
         is_user_like = PostUserLike.objects.filter(post_id=post_id, liker=user).exists()
         is_user_reply = Reply.objects.filter(author=user, post_id=post_id).exists()

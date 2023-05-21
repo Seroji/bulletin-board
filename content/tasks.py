@@ -1,8 +1,7 @@
 from celery import shared_task
-import time
+from .mail import reply_user_inform
 
 
 @shared_task
-def hello():
-    time.sleep(5)
-    print('Hello!')
+def reply_info(post_id):
+    reply_user_inform(post_id)
