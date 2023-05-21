@@ -31,6 +31,15 @@
                 <tr>
                     <td><b>Электронная почта:</b></td>
                     <td>{{ request.user.email }}</td>
+                    {% if not email_verified %}
+                        <td>
+                            <span style="color: red">Не подтверждён</span>
+                        </td>
+                    {% else %}  
+                        <td>
+                            <span style="color: green">Подтверждён</span>
+                        </td>
+                    {% endif %}
                 </tr>
                 <tr>
                     <td><b>Дата регистрации:</b></td>

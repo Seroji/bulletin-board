@@ -1,4 +1,3 @@
-from typing import Any, Optional
 from django.db import models
 from django.shortcuts import render, HttpResponse, redirect
 from django.views import generic, View
@@ -7,11 +6,11 @@ from django.contrib.auth.views import PasswordChangeView
 from django.views.generic.edit import FormMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+from allauth.account.admin import EmailAddress
+
 from .models import Post, Reply, PostUserFavourite, PostUserLike, PostCategory, Reply
 from .forms import ProfileChangeForm, PasswordEditForm, PostAddForm, ReplyAddForm
 from .filters import ReplyFilter
-
-from django.core.mail import send_mail
 
 
 class MainPageView(generic.ListView):
@@ -38,13 +37,15 @@ class MainPageView(generic.ListView):
 
 class MainProfileView(LoginRequiredMixin, generic.DetailView):
     def get(self, request):
-        return render(request, "profile/profile.html")
+        res = EmailAddress.objects.filter(user=self.request.user, verified=True).exists()
+        return render(request, "profile/profile.html", {'email_verified': res})
     
 
 #htmx
 class MainProfileGetView(LoginRequiredMixin, View):
     def get(self, request):
-        return render(request, 'partials/profile_main.html')
+        res = EmailAddress.objects.filter(user=self.request.user, verified=True).exists()
+        return render(request, 'partials/profile_main.html', {'email_verified': res})
     
 
 #htmx
