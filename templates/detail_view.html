@@ -83,26 +83,28 @@
         </div>
     </div>
     {% if request.user.is_authenticated %}
-        {% if is_user_reply %}
-        <div class="row">
-            <div class="col-md-12 text-end">
-                <p>
-                <button type="button" class="btn btn-outline-success" disabled>
-                    Ваш отклик сохранён!
-                </button>
-                </p>
+        {% if not is_author_current_user %}
+            {% if is_user_reply %}
+            <div class="row">
+                <div class="col-md-12 text-end">
+                    <p>
+                    <button type="button" class="btn btn-outline-success" disabled>
+                        Ваш отклик сохранён!
+                    </button>
+                    </p>
+                </div>
             </div>
-        </div>
-        {% else %}
-        <div class="row">
-            <div class="col-md-12 text-end">
-                <p>
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#reply">
-                    Откликнуться
-                </button>
-                </p>
+            {% else %}
+            <div class="row">
+                <div class="col-md-12 text-end">
+                    <p>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#reply">
+                        Откликнуться
+                    </button>
+                    </p>
+                </div>
             </div>
-        </div>
+            {% endif %}
         {% endif %}
     {% else %}
     <div class="row">

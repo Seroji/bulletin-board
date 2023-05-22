@@ -1,4 +1,6 @@
+from typing import Any
 from django.db import models
+from django.db.models.query import QuerySet
 from django.shortcuts import render, HttpResponse, redirect
 from django.views import generic, View
 from django.urls import reverse_lazy
@@ -7,6 +9,7 @@ from django.views.generic.edit import FormMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from allauth.account.admin import EmailAddress
+from allauth.account.views import ConfirmEmailView
 
 from .models import Post, Reply, PostUserFavourite, PostUserLike, PostCategory, Reply
 from .forms import ProfileChangeForm, PasswordEditForm, PostAddForm, ReplyAddForm
@@ -34,6 +37,9 @@ class MainPageView(generic.ListView):
             context['follow_posts'] = follow_posts
             context['liked_posts'] = liked_posts
         return context
+    
+    def get_queryset(self):
+        return Post.objects.all().order_by('-id')   
 
 
 class MainProfileView(LoginRequiredMixin, generic.DetailView):
@@ -103,9 +109,11 @@ class PostDetailView(generic.DetailView, FormMixin):
             is_user_follower = PostUserFavourite.objects.filter(post_id=post_id, follower=user).exists()
             is_user_like = PostUserLike.objects.filter(post_id=post_id, liker=user).exists()
             is_user_reply = Reply.objects.filter(author=user, post_id=post_id).exists()
+            is_author_current_user = Post.objects.filter(author=user, id=post_id).exists()
             context['is_user_follower'] = is_user_follower
             context['is_user_like'] = is_user_like
             context['is_user_reply'] = is_user_reply
+            context['is_author_current_user'] = is_author_current_user
         return context
     
     def post(self, request, *args, **kwargs):
@@ -210,3 +218,8 @@ class PostAddView(LoginRequiredMixin, generic.CreateView):
         )
         announcements = Post.objects.all()
         return redirect(to='main_page')
+
+
+class OTPView(ConfirmEmailView):
+    def get(self, requset, *args, **kwargs):
+        return render(requset, 'post_Detail.html')

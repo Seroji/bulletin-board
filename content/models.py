@@ -1,6 +1,12 @@
+import random
+
 from django.db import models
 from tinymce.models import HTMLField
 from django.contrib.auth.models import User
+from django.dispatch import receiver
+from django.db.models.signals import post_save
+
+from allauth.account.models import EmailAddress
 
 
 class Category(models.Model):
@@ -70,3 +76,16 @@ class Reply(models.Model):
     text = models.TextField(default='Отклик')
     answer = models.BooleanField(default=False)
     time_in = models.DateTimeField(auto_now_add=True)
+
+
+class CustomOTPEmailModel(models.Model):
+    email = models.EmailField()
+    otp = models.IntegerField(default=111111)
+
+    @receiver(signal=post_save, sender=EmailAddress)
+    def create_email_otp(sender, instance, created, **kwargs):
+        if created:
+            CustomOTPEmailModel.objects.create(
+                email=instance.email,
+                otp = random.randrange(111111, 1000000),
+            )
