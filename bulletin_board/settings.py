@@ -133,7 +133,6 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
-
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'APP': {
@@ -152,7 +151,7 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 LOGIN_URL = 'account_login'
-LOGIN_REDIRECT_URL = 'main_page'
+LOGIN_REDIRECT_URL = 'verify_email'
 
 ACCOUNT_FORMS = {
     'login': 'content.forms.CustomLoginForm',
@@ -160,12 +159,12 @@ ACCOUNT_FORMS = {
 }
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-ACCOUNT_EMAIL_REQUIRED = True
+# ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
-ACCOUNT_CONFIRM_EMAIL_ON_GET = True
-ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
-ACCOUNT_EMAIL_SUBJECT_PREFIX = ''
-ACCOUNT_EMAIL_CONFIRMATION_HMAC = True
+# ACCOUNT_CONFIRM_EMAIL_ON_GET = False
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+# ACCOUNT_EMAIL_SUBJECT_PREFIX = ''
+# ACCOUNT_EMAIL_CONFIRMATION_HMAC = True
 
 #Mail
 EMAIL_HOST = 'smtp.mail.ru'

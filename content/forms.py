@@ -115,3 +115,10 @@ class CustomRegisterForm(UserCreationForm):
             'password1',
             'password2',
         )
+
+
+class OTPForm(forms.Form):
+    otp = forms.IntegerField(label='Проверочный код', 
+                             widget=forms.TextInput(attrs={'class': 'form-control verify-code', 'type': 'text'}), 
+                             required=True)
+

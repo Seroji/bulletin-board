@@ -6,8 +6,6 @@ from django.contrib.auth.models import User
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 
-from allauth.account.models import EmailAddress
-
 
 class Category(models.Model):
     category = models.CharField(max_length=64)
@@ -55,19 +53,6 @@ class PostUserLike(models.Model):
                               on_delete=models.CASCADE)
 
 
-class Comment(models.Model):
-    author = models.ForeignKey(User,
-                               related_name='comments',
-                               on_delete=models.CASCADE)
-    text = models.TextField()
-    time_in = models.DateTimeField(auto_now_add=True)
-    time_updated = models.DateTimeField(auto_now=True)
-    like = models.PositiveIntegerField(default=0)
-    post = models.ForeignKey(Post,
-                             related_name="comments",
-                             on_delete=models.CASCADE)
-
-
 class Reply(models.Model):
     post = models.ForeignKey(Post,
                              on_delete=models.CASCADE)
@@ -78,14 +63,17 @@ class Reply(models.Model):
     time_in = models.DateTimeField(auto_now_add=True)
 
 
-class CustomOTPEmailModel(models.Model):
-    email = models.EmailField()
-    otp = models.IntegerField(default=111111)
+class EmailAddresses(models.Model):
+    user = models.OneToOneField(User,
+                                on_delete=models.CASCADE)
+    is_verify = models.BooleanField(default=False)
+    otp = models.IntegerField(default='123456')
 
-    @receiver(signal=post_save, sender=EmailAddress)
-    def create_email_otp(sender, instance, created, **kwargs):
+    @receiver(signal=post_save, sender=User)
+    def create_email_check(sender, instance, created, **kwargs):
         if created:
-            CustomOTPEmailModel.objects.create(
-                email=instance.email,
-                otp = random.randrange(111111, 1000000),
+            EmailAddresses.objects.create(
+                user=instance,
+                is_verify=False,
+                otp=random.randrange(111111, 1000000)
             )

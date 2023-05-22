@@ -7,14 +7,14 @@ from django.urls import reverse_lazy
 from django.contrib.auth.views import PasswordChangeView
 from django.views.generic.edit import FormMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib import messages
+from django.contrib.auth.models import Group
 
-from allauth.account.admin import EmailAddress
-from allauth.account.views import ConfirmEmailView
-
-from .models import Post, Reply, PostUserFavourite, PostUserLike, PostCategory, Reply
-from .forms import ProfileChangeForm, PasswordEditForm, PostAddForm, ReplyAddForm
+from .models import Post, Reply, PostUserFavourite, PostUserLike, PostCategory, Reply, EmailAddresses
+from .forms import ProfileChangeForm, PasswordEditForm, PostAddForm, ReplyAddForm, OTPForm
 from .filters import ReplyFilter
 from .tasks import reply_info, apply_info
+from .mail import verify_code
 
 
 class MainPageView(generic.ListView):
@@ -44,14 +44,14 @@ class MainPageView(generic.ListView):
 
 class MainProfileView(LoginRequiredMixin, generic.DetailView):
     def get(self, request):
-        res = EmailAddress.objects.filter(user=self.request.user, verified=True).exists()
+        res = EmailAddresses.objects.filter(user=self.request.user, is_verify=True).exists()
         return render(request, "profile/profile.html", {'email_verified': res})
     
 
 #htmx
 class MainProfileGetView(LoginRequiredMixin, View):
     def get(self, request):
-        res = EmailAddress.objects.filter(user=self.request.user, verified=True).exists()
+        res = EmailAddresses.objects.filter(user=self.request.user, is_verify=True).exists()
         return render(request, 'partials/profile_main.html', {'email_verified': res})
     
 
@@ -205,6 +205,9 @@ class PostAddView(LoginRequiredMixin, generic.CreateView):
         if not request.FILES:
             print('123')
             return render(request, self.template_name, {'form': form})
+        if not self.request.user.groups.filter(name='virified_email').exists():
+            form = OTPForm()
+            return redirect(to='verify_email')
         post = Post(
             title = request.POST['title'],
             author = self.request.user,
@@ -218,8 +221,35 @@ class PostAddView(LoginRequiredMixin, generic.CreateView):
         )
         announcements = Post.objects.all()
         return redirect(to='main_page')
+    
+
+class ChangePostView(generic.UpdateView):
+    form_class = PostAddForm
+    model = Post
+    template_name = 'post_add.html'
+    success_url = reverse_lazy('main_page')
 
 
-class OTPView(ConfirmEmailView):
-    def get(self, requset, *args, **kwargs):
-        return render(requset, 'post_Detail.html')
+class VerifyEmailByCodeView(View):
+    def get(self, request, *args, **kwargs):
+        if EmailAddresses.objects.filter(user_id=self.request.user.id, is_verify=False).exists():
+            form = OTPForm()
+            verify_code(user_id=self.request.user.id)
+            return render(self.request, 'profile/verify_email.html', {'form': form})
+        else:
+            return redirect(to='main_page')
+    
+    def post(self, request, *args, **kwargs):
+        otp = int(self.request.POST['otp'])
+        instance = EmailAddresses.objects.get(user_id=self.request.user.id)
+        otp_base = instance.otp
+        if otp == otp_base:
+            instance.is_verify = True
+            instance.save()
+            group = Group.objects.get(id=1)
+            group.user_set.add(self.request.user)
+            return redirect(to='main_profile')
+        else:
+            form = OTPForm()
+            message = 'Неверный код!'
+            return render(self.request, 'profile/verify_email.html', {'form': form, 'message': message})

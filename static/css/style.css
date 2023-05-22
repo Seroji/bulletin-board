@@ -122,3 +122,9 @@ img {
     border-collapse: separate;
     border-spacing: 20px 0;
 }
+
+.verify-code {
+    text-align: center;
+    width: 150px;
+    font-size: 30px;
+}

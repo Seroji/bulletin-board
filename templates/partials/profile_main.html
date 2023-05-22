@@ -33,7 +33,7 @@
                     <td>{{ request.user.email }}</td>
                     {% if not email_verified %}
                         <td>
-                            <span style="color: red">Не подтверждён</span>
+                            <a href="{% url 'verify_email' %}" class="post-link">Подтвердить</a>
                         </td>
                     {% else %}  
                         <td>
