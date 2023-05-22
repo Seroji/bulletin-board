@@ -1,0 +1,17 @@
+{% extends 'flatpages/default.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <h3>Избранные публикации</h3>
+            {% for post in posts %}
+            <br>
+            <p>
+                <a href="{% url 'post_detail' pk=post.id %}" class="post-link">{{ post.title }}</a>
+            </p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock content %}

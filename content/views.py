@@ -13,7 +13,7 @@ from django.contrib.auth.models import Group
 from .models import Post, Reply, PostUserFavourite, PostUserLike, PostCategory, Reply, EmailAddresses
 from .forms import ProfileChangeForm, PasswordEditForm, PostAddForm, ReplyAddForm, OTPForm
 from .filters import ReplyFilter
-from .tasks import reply_info, apply_info
+from .tasks import reply_info, apply_info, verify_email
 from .mail import verify_code
 
 
@@ -232,7 +232,7 @@ class ChangePostView(generic.UpdateView):
     def get(self, request, *args, **kwargs):
         if EmailAddresses.objects.filter(user_id=self.request.user.id, is_verify=False).exists():
             form = OTPForm()
-            verify_code(user_id=self.request.user.id)
+            verify_email.delay(user_id=self.request.user.id)
             return redirect(to='verify_email')
         instance = Post.objects.get(id=kwargs.pop('pk'))
         form = PostAddForm(instance=instance)
@@ -243,7 +243,7 @@ class VerifyEmailByCodeView(View):
     def get(self, request, *args, **kwargs):
         if EmailAddresses.objects.filter(user_id=self.request.user.id, is_verify=False).exists():
             form = OTPForm()
-            verify_code(user_id=self.request.user.id)
+            verify_email.delay(user_id=self.request.user.id)
             return render(self.request, 'profile/verify_email.html', {'form': form})
         else:
             return redirect(to='main_page')
@@ -262,3 +262,16 @@ class VerifyEmailByCodeView(View):
             form = OTPForm()
             message = 'Неверный код!'
             return render(self.request, 'profile/verify_email.html', {'form': form, 'message': message})
+
+
+class FavouritePostView(View):
+    def get(self, request, *args, **kwargs):
+        posts = []
+        posts_ids = PostUserFavourite.objects.filter(follower=self.request.user).values_list('post_id', flat=True)
+        for pk in posts_ids:
+            post = Post.objects.get(pk=pk)
+            posts.append(post)
+        context = {
+            'posts': posts,
+        }
+        return render(self.request, 'follow_post.html', context=context)

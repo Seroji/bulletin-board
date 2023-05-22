@@ -16,6 +16,7 @@ from .views import (
     ReplyActionView,
     VerifyEmailByCodeView,
     ChangePostView,
+    FavouritePostView,
 )
 
 
@@ -29,6 +30,7 @@ urlpatterns = [
     path('add/', PostAddView.as_view(), name='post_add'),
     path('verify/', VerifyEmailByCodeView.as_view(), name='verify_email'),
     path('change/<int:pk>', ChangePostView.as_view(), name='change_post'),
+    path('favourite/', FavouritePostView.as_view(), name='post_favourite'),
 ]
 
 htmx_patterns = [
