@@ -1,0 +1,6 @@
+{% load i18n %}{% autoescape off %}{% blocktrans with site_name=current_site.name %}Приветствуем на сайте {{ site_name }}!{% endblocktrans %}
+
+{% block content %}{% endblock %}
+
+Благодарим Вас за регистрацию на Bulletin Board!
+{% endautoescape %}

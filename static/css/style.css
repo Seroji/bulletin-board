@@ -72,6 +72,7 @@ img {
 
 .post-link:hover {
     color: #303b44;
+    cursor: pointer;
 }
 
 .announce-block {
@@ -86,4 +87,44 @@ img {
 
 .profile-content {
     padding: 15px;
+}
+
+.inline-button-in-detail-view {
+    background-color: #fff;
+    border: None;
+}
+
+.profile-change-form {
+    padding: 10px;
+}
+
+.password-change-back {
+    color: black;
+    text-decoration: None;
+    font-weight: 400;
+    padding: 10px;
+}
+
+.password-change-back:hover {
+    color: grey;
+}
+
+.widget-image {
+    height: 100px;
+    width: 100px;
+}
+
+.provider-login-list {
+    width: 100px;
+}
+
+.login-table {  
+    border-collapse: separate;
+    border-spacing: 20px 0;
+}
+
+.verify-code {
+    text-align: center;
+    width: 150px;
+    font-size: 30px;
 }

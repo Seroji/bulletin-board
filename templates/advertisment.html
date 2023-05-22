@@ -1,0 +1,18 @@
+{% extends 'flatpages/default.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <h3>Рассылка</h3>
+            <form method="post" id="form">
+                {% csrf_token %}
+                {{ form.as_p }}
+            </form>
+            <p>
+                <button type="submit" class="btn btn-primary" form="form">Отправить</button>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock content %}

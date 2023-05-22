@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 import os
 from pathlib import Path
 
+from django.urls import reverse_lazy
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -46,6 +48,14 @@ INSTALLED_APPS = [
     'content',
     'widget_tweaks',
     'django_htmx',
+    'rest_framework',
+    'image_uploader_widget',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.vk',
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -67,6 +77,7 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             os.path.join(BASE_DIR, 'templates/'),
+            os.path.join(BASE_DIR, 'templates/allauth/')
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -75,6 +86,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.request',
             ],
         },
     },
@@ -113,6 +125,57 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+
+#AllAuth
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'APP': {
+            'client_id': '1091708260808-0pn5hro21d4cu1ee5k1a9frj2ot8lu7c.apps.googleusercontent.com',
+            'secret': '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',
+            'key': '',
+        }
+    },
+    'vk': {
+        'APP': {
+            'client_id': '51651815',
+            'secret': 'krqPs1Rf3leV6N8iwqs8',
+            'key': '',
+        }
+    }
+}
+
+LOGIN_URL = 'account_login'
+LOGIN_REDIRECT_URL = 'verify_email'
+
+ACCOUNT_FORMS = {
+    'login': 'content.forms.CustomLoginForm',
+    'signup': 'content.forms.CustomRegisterForm',
+}
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True
+# ACCOUNT_CONFIRM_EMAIL_ON_GET = False
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+# ACCOUNT_EMAIL_SUBJECT_PREFIX = ''
+# ACCOUNT_EMAIL_CONFIRMATION_HMAC = True
+
+#Mail
+EMAIL_HOST = 'smtp.mail.ru'
+EMAIL_PORT = 465
+EMAIL_USE_SSL = True
+EMAIL_HOST_USER = 'gamexr6@mail.ru'
+EMAIL_HOST_PASSWORD = '4e8i6ks1hhuizLkb6tNd'
+
+#Error Mail
+# SERVER_EMAIL = EMAIL_HOST_USER
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 
 # Internationalization
@@ -166,6 +229,7 @@ DIRECTORY = ''
 X_FRAME_OPTIONS = 'SAMEORIGIN'
 
 TINYMCE_DEFAULT_CONFIG = {
+    "height": "700px",
     "relative_urls": False,
     "remove_script_host": False,
     "convert_urls": True,
@@ -191,3 +255,10 @@ TINYMCE_DEFAULT_CONFIG = {
     'statusbar': True,
     "language": "ru",
 }
+
+#Celery, Redis
+CELERY_BROKER_URL = 'redis://localhost:6379'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'

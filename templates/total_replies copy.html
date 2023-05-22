@@ -1,0 +1,70 @@
+{% extends 'flatpages/default.html' %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col text-center">
+                <h5>Все отклики на ваши объявления</h5>
+                <br>
+                <form method="get">
+                    {{ filter.form.as_p }}
+                    <input type="submit" value="Отфильтровать">
+                </form>
+                <br>
+                    <table class="table table-striped">
+                        <tr>
+                            <th>Автор отклика</th>
+                            <th>Дата</th>
+                            <th>Ваш пост</th>
+                            <th>Текст отклика</th>
+                            <th>Действие </th>
+                        </tr>
+                        {% for obj in replies %}
+                        <tr>
+                            <td>
+                                {{ obj.author }}
+                            </td>
+                            <td>
+                                {{ obj.time_in }}
+                            </td>
+                            <td>
+                                <a class="post-link" href="{% url 'post_detail' pk=obj.post_id %}">
+                                    {{ obj.post.title }}
+                                </a>
+                            </td>
+                            <td>
+                                {{ obj.text }}
+                            </td>
+                            <td>
+                                {% if not obj.answer %}
+                                    <div id="action-reply">
+                                        <form style="display: inline-block" id='applyform'
+                                            hx-post="{% url 'reply_action' %}"  
+                                            hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' 
+                                            hx-include="[name='obj-id']"
+                                            hx-swap="outerHTML"
+                                            hx-target="#action-reply">
+                                            <input type=hidden name="obj-id" value="{{ obj.id }}">
+                                            <button class="btn btn-primary" type="submit" form="applyform" name="apply">Принять</button>
+                                        </form>
+                                        <form style="display: inline-block" id='denyform'
+                                            hx-post="{% url 'reply_action' %}"  
+                                            hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' 
+                                            hx-include="[name='obj-id']"
+                                            hx-swap="outerHTML"
+                                            hx-target="#action-reply">
+                                            <input type=hidden name="obj-id" value="{{ obj.id }}">
+                                            <button class="btn btn-primary" type="submit" form="denyform" name="deny">Отклонить</button>
+                                        </form>
+                                    </div>
+                                {% else %}
+                                    <span style="color:green">Принят</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

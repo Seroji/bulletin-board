@@ -1,0 +1,154 @@
+{% extends 'flatpages/default.html' %}
+
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-3 text-start">
+            {{ obj.author }}, {{ obj.time_in }}
+        </div>
+        <div class="col-md-9 text-end">
+            <span class="small-icons-post">
+                {% if request.user.is_authenticated %}
+                    {% if is_user_like %}
+                        <form style="display: inline-block" id='like'
+                                    hx-post="{% url 'like_change' %}"  
+                                    hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' 
+                                    hx-include="[name='like']"
+                                    hx-swap="outerHTML"
+                                    hx-target="#likeimage">
+                            <input type=hidden name="like" value="{{ obj.id }}">
+                        </form>
+                        <button form="like" id='sub-button' type="submit" class="inline-button-in-detail-view">
+                            <img class="small-icons-post-img" id="likeimage" src="{% static 'img/icons/favourite_filled.png' %}">
+                        </button>
+                    {% else %}
+                        <form style="display: inline-block" id='like'
+                                    hx-post="{% url 'like_change' %}"  
+                                    hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' 
+                                    hx-include="[name='like']"
+                                    hx-swap="outerHTML"
+                                    hx-target="#likeimage">
+                            <input type=hidden name="like" value="{{ obj.id }}">
+                        </form>
+                        <button form="like" id='sub-button' type="submit" class="inline-button-in-detail-view">
+                            <img class="small-icons-post-img" id="likeimage" src="{% static 'img/icons/favourite_empty.png' %}">
+                        </button>
+                    {% endif %}
+                    {% if is_user_follower %}
+                        <form style="display: inline-block" id='sub'
+                                    hx-post="{% url 'follower_change' %}"  
+                                    hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' 
+                                    hx-include="[name='id']"
+                                    hx-swap="outerHTML"
+                                    hx-target="#subimage">
+                            <input type=hidden name="id" value="{{ obj.id }}">
+                        </form>
+                        <button form="sub" id='sub-button' type="submit" class="inline-button-in-detail-view">
+                            <img class="small-icons-post-img" id="subimage" src="{% static 'img/icons/bookmark_add.png' %}">
+                        </button>
+                    {% else %}
+                        <form style="display: inline-block" id='sub'
+                                    hx-post="{% url 'follower_change' %}"  
+                                    hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' 
+                                    hx-include="[name='id']"
+                                    hx-swap="outerHTML"
+                                    hx-target="#subimage">
+                            <input type=hidden name="id" value="{{ obj.id }}">
+                        </form>
+                        <button form="sub" id='sub-button' type="submit" class="inline-button-in-detail-view">
+                            <img class="small-icons-post-img" id="subimage" src="{% static 'img/icons/bookmark_not_add.png' %}">
+                        </button>
+                    {% endif %}
+                {% else %}
+                    <form method="get" action="{% url 'account_login' %}" style="display: inline-block">
+                    <button type="submit" class="inline-button-in-detail-view">
+                        <img class="small-icons-post-img" src="{% static 'img/icons/favourite_empty.png' %}">
+                    </button>
+                    </form>
+                    <form method="get" action="{% url 'account_login' %}" style="display: inline-block">
+                    <button type="submit" class="inline-button-in-detail-view">
+                        <img class="small-icons-post-img" src="{% static 'img/icons/bookmark_not_add.png' %}">
+                    </button>
+                    </form>
+                {% endif %}
+            </span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col text-center">
+            <h3>{{ obj.title }}</h3
+            {{ obj.content|safe }}
+        </div>
+    </div>
+    {% if request.user.is_authenticated %}
+        {% if not is_author_current_user %}
+            {% if is_user_reply %}
+            <div class="row">
+                <div class="col-md-12 text-end">
+                    <p>
+                    <button type="button" class="btn btn-outline-success" disabled>
+                        Ваш отклик сохранён!
+                    </button>
+                    </p>
+                </div>
+            </div>
+            {% else %}
+            <div class="row">
+                <div class="col-md-12 text-end">
+                    <p>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#reply">
+                        Откликнуться
+                    </button>
+                    </p>
+                </div>
+            </div>
+            {% endif %}
+        {% else %}
+        <div class="row">
+            <div class="col-md-12 text-end">
+                <p>
+                <form method="get" action="{% url 'change_post' pk=obj.id %}">
+                <button type="submit" class="btn btn-primary">
+                    Редактировать
+                </button>
+                </form>
+                </p>
+            </div>
+        </div>
+        {% endif %}
+    {% else %}
+    <div class="row">
+        <div class="col-md-12 text-end">
+            <form method="get" action="{% url 'account_login' %}">
+                <button class="btn btn-primary" type="submit">
+                    Откликнуться
+                </button>
+            </form>
+            </p>
+        </div>
+    </div>
+    {% endif %}
+    <div class="modal fade" id="reply" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="exampleModalLabel">Оставить отклик</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" id="replyform">
+                    {% csrf_token %}
+                    {{ form }}
+                </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+              <button type="submit" class="btn btn-primary" form="replyform">Сохранить изменения</button>
+            </div>
+          </div>
+        </div>
+      </div>
+</div>
+{% endblock content %}

@@ -18,25 +18,38 @@
             <table class="profile-table" id="profile-table">
                 <tr>
                     <td><b>Имя:</b></td>
-                    <td>---</td>
+                    <td>{{ request.user.first_name }}</td>
                 </tr>
                 <tr>
                     <td><b>Фамилия:</b></td>
-                    <td>---</td>
+                    <td>{{ request.user.last_name }}</td>
                 </tr>
                 <tr>
                     <td><b>Имя пользователя:</b></td>
                     <td>{{ request.user.username }}</td>
                 </tr>
                 <tr>
+                    <td><b>Электронная почта:</b></td>
+                    <td>{{ request.user.email }}</td>
+                    {% if not email_verified %}
+                        <td>
+                            <a href="{% url 'verify_email' %}" class="post-link">Подтвердить</a>
+                        </td>
+                    {% else %}  
+                        <td>
+                            <span style="color: green">Подтверждён</span>
+                        </td>
+                    {% endif %}
+                </tr>
+                <tr>
                     <td><b>Дата регистрации:</b></td>
                     <td>{{ request.user.date_joined | date }}</td>
                 </tr>
                 <tr>
-                    <td><a class="post-link" href="#">Поменять пароль</a></td>
+                    <td><a class="post-link" href="{% url 'password_change' %}">Поменять пароль</a></td>
                 </tr>
                 <tr>
-                    <td><a class="post-link" href="#">Поменять данные профиля</a></td>
+                    <td><a class="post-link" hx-get="{% url 'profile_change' %}" hx-trigger="click" hx-target="#profile-table" hx-swap="outerHTML">Поменять данные профиля</a></td>
                 </tr>
             </table>
         </div>

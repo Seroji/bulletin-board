@@ -1,13 +1,17 @@
+import random
+
 from django.db import models
 from tinymce.models import HTMLField
 from django.contrib.auth.models import User
+from django.dispatch import receiver
+from django.db.models.signals import post_save
 
 
 class Category(models.Model):
     category = models.CharField(max_length=64)
 
     def __str__(self):
-        return self.title
+        return self.category
 
 class Post(models.Model):
     title = models.CharField(max_length=128)
@@ -18,11 +22,14 @@ class Post(models.Model):
     author = models.ForeignKey(User,
                                related_name='posts', 
                                on_delete=models.CASCADE)
-    like = models.PositiveIntegerField(default=0)
     content = HTMLField(default=None)
-    cover = models.ImageField(upload_to='news_cover/')  #Настроить генераци+ю случайного неповторяющегося имени файла
+    cover = models.ImageField(upload_to='cover/')
     follow = models.ManyToManyField(User,
-                                    through='PostUserFavourite')
+                                    through='PostUserFavourite',
+                                    related_name='postsfollow')
+    like = models.ManyToManyField(User,
+                                  through='PostUserLike',
+                                  related_name='postslike')
 
 
 class PostCategory(models.Model):
@@ -37,19 +44,13 @@ class PostUserFavourite(models.Model):
                              on_delete=models.CASCADE)
     follower = models.ForeignKey(User,
                                  on_delete=models.CASCADE)
+    
 
-
-class Comment(models.Model):
-    author = models.ForeignKey(User,
-                               related_name='comments',
-                               on_delete=models.CASCADE)
-    text = models.TextField()
-    time_in = models.DateTimeField(auto_now_add=True)
-    time_updated = models.DateTimeField(auto_now=True)
-    like = models.PositiveIntegerField(default=0)
+class PostUserLike(models.Model):
     post = models.ForeignKey(Post,
-                             related_name="comments",
                              on_delete=models.CASCADE)
+    liker = models.ForeignKey(User,
+                              on_delete=models.CASCADE)
 
 
 class Reply(models.Model):
@@ -57,3 +58,22 @@ class Reply(models.Model):
                              on_delete=models.CASCADE)
     author = models.ForeignKey(User,
                                on_delete=models.CASCADE)
+    text = models.TextField(default='Отклик')
+    answer = models.BooleanField(default=False)
+    time_in = models.DateTimeField(auto_now_add=True)
+
+
+class EmailAddresses(models.Model):
+    user = models.OneToOneField(User,
+                                on_delete=models.CASCADE)
+    is_verify = models.BooleanField(default=False)
+    otp = models.IntegerField(default='123456')
+
+    @receiver(signal=post_save, sender=User)
+    def create_email_check(sender, instance, created, **kwargs):
+        if created:
+            EmailAddresses.objects.create(
+                user=instance,
+                is_verify=False,
+                otp=random.randrange(111111, 1000000)
+            )

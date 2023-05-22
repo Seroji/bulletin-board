@@ -1,0 +1,27 @@
+{% extends 'flatpages/default.html' %}
+
+{% block content %}
+<div class="container d-flex justify-content-center">
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <table>
+                <tr>
+                    <form method="post" id="code">
+                        {% csrf_token %}
+                        {% if message %}
+                            {{ message }}
+                        {% endif %}
+                        <div class="fieldWrapper profile-change-form">
+                            {{ form.otp.label }}
+                            {{ form.otp }}
+                        </div>
+                        <p>
+                        <button type="submit" class="btn btn-primary" form="code">Подтвердить</button>
+                        </p>
+                    </form>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock content %}

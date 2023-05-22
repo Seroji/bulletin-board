@@ -1,0 +1,45 @@
+{% extends "flatpages/default.html" %}
+
+{% load account socialaccount %}
+{% load static %}
+
+{% block content %}
+
+{% get_providers as socialaccount_providers %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <h1>Вход</h1>
+            <p>
+                Пожалуйста, войдите через один из сторонних сервисов представленных ниже, либо <a href="{% url 'account_signup' %}">зарегистрируйтесь</a>.
+            </p>
+            {% include "socialaccount/snippets/provider_list.html" with process="login" %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <p>
+            <form class="login" method="POST" action="{% url 'account_login' %}">
+                {% csrf_token %}
+                {{ form.as_p }}
+                {% if redirect_field_value %}
+                <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+                {% endif %}
+                <table class="mx-auto login-table">
+                    <tr>
+                        <td>
+                            <a class="button secondaryAction" href="{% url 'account_reset_password' %}">Восстановить пароль</a>
+                        </td>
+                        <td>
+                            <button class="primaryAction" type="submit">Войти</button>
+                        </td>
+                    </tr>
+                </table>
+              </form>
+            </p>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
