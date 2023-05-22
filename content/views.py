@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Optional
 from django.db import models
 from django.db.models.query import QuerySet
 from django.shortcuts import render, HttpResponse, redirect
@@ -228,6 +228,15 @@ class ChangePostView(generic.UpdateView):
     model = Post
     template_name = 'post_add.html'
     success_url = reverse_lazy('main_page')
+
+    def get(self, request, *args, **kwargs):
+        if EmailAddresses.objects.filter(user_id=self.request.user.id, is_verify=False).exists():
+            form = OTPForm()
+            verify_code(user_id=self.request.user.id)
+            return redirect(to='verify_email')
+        instance = Post.objects.get(id=kwargs.pop('pk'))
+        form = PostAddForm(instance=instance)
+        return render(self.request, 'post_add.html', {'form': form})
 
 
 class VerifyEmailByCodeView(View):

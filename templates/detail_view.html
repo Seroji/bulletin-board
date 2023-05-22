@@ -105,6 +105,18 @@
                 </div>
             </div>
             {% endif %}
+        {% else %}
+        <div class="row">
+            <div class="col-md-12 text-end">
+                <p>
+                <form method="get" action="{% url 'change_post' pk=obj.id %}">
+                <button type="submit" class="btn btn-primary">
+                    Редактировать
+                </button>
+                </form>
+                </p>
+            </div>
+        </div>
         {% endif %}
     {% else %}
     <div class="row">
