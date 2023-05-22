@@ -122,3 +122,7 @@ class OTPForm(forms.Form):
                              widget=forms.TextInput(attrs={'class': 'form-control verify-code', 'type': 'text'}), 
                              required=True)
 
+
+class AdvertismentForm(forms.Form):
+    subject = forms.CharField(label='Тема письма', widget=forms.TextInput(attrs={'class': 'form-control', 'type': 'text'}))
+    text_content = forms.CharField(label='Содержание', widget=forms.Textarea(attrs={'class': 'form-control', 'type': 'text'}))

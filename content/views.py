@@ -7,14 +7,12 @@ from django.urls import reverse_lazy
 from django.contrib.auth.views import PasswordChangeView
 from django.views.generic.edit import FormMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib import messages
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group, User
 
 from .models import Post, Reply, PostUserFavourite, PostUserLike, PostCategory, Reply, EmailAddresses
-from .forms import ProfileChangeForm, PasswordEditForm, PostAddForm, ReplyAddForm, OTPForm
+from .forms import ProfileChangeForm, PasswordEditForm, PostAddForm, ReplyAddForm, OTPForm, AdvertismentForm
 from .filters import ReplyFilter
-from .tasks import reply_info, apply_info, verify_email
-from .mail import verify_code
+from .tasks import reply_info, apply_info, verify_email, advert
 
 
 class MainPageView(generic.ListView):
@@ -275,3 +273,18 @@ class FavouritePostView(View):
             'posts': posts,
         }
         return render(self.request, 'follow_post.html', context=context)
+
+
+class AdvertismentView(View):
+    def get(self, request, *args, **kwargs):
+        if self.request.user.is_superuser:
+            form = AdvertismentForm()
+            return render(request, 'advertisment.html', {'form': form})
+        else:
+            return redirect(to='main_page')
+    
+    def post(self, request, *args, **kwargs):
+        subject = request.POST['subject']
+        text_content = request.POST['text_content']
+        advert.delay(subject=subject, text_content=text_content)
+        return redirect(to='main_page')

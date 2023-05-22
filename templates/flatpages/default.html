@@ -46,6 +46,9 @@
                 <li><a class="dropdown-item" href="{% url 'total_replies' %}">Отклики</a></li>
                 <li><a class="dropdown-item" href="{% url 'post_favourite' %}">Избранные публикации</a></li>
                 <li><a class="dropdown-item" href="{% url 'post_add' %}">Добавить публикацию</a></li>
+                {% if request.user.is_superuser %}
+                <li><a class="dropdown-item" href="{% url 'advertisment' %}">Новостная рассылка</a></li>
+                {% endif %}
                 <li>
                   <hr class="dropdown-divider">
                 </li>

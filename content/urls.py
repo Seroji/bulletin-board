@@ -17,6 +17,7 @@ from .views import (
     VerifyEmailByCodeView,
     ChangePostView,
     FavouritePostView,
+    AdvertismentView
 )
 
 
@@ -31,6 +32,7 @@ urlpatterns = [
     path('verify/', VerifyEmailByCodeView.as_view(), name='verify_email'),
     path('change/<int:pk>', ChangePostView.as_view(), name='change_post'),
     path('favourite/', FavouritePostView.as_view(), name='post_favourite'),
+    path('advertisment/', AdvertismentView.as_view(), name='advertisment')
 ]
 
 htmx_patterns = [

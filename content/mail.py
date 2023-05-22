@@ -1,4 +1,4 @@
-from django.core.mail import EmailMultiAlternatives
+from django.core.mail import EmailMultiAlternatives, send_mass_mail
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.contrib.auth.models import User
@@ -56,3 +56,16 @@ def verify_code(user_id):
     )
     msg.attach_alternative(html_content, 'text/html')
     msg.send()
+
+
+def advertisment(subject, text_content):
+    recipient_list = []
+    for user in User.objects.all():
+        recipient_list.append(user.email)
+    message = (
+        subject,
+        text_content,
+        "gamexr6@mail.ru",
+        recipient_list,
+    )
+    send_mass_mail((message,))
